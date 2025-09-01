@@ -1,0 +1,34 @@
+{
+  "$schema": "https://raw.githubusercontent.com/vicinaehq/vicinae/refs/heads/main/extra/schemas/extension.json",
+  "name": "power-menu",
+  "title": "Power Menu",
+  "description": "Essential power commands at you fingertips!",
+  "categories": [],
+  "license": "MIT",
+  "author": "DagimAstatkie",
+  "contributors": [],
+  "pastContributors": [],
+  "icon": "extension_icon.png",
+  "commands": [
+    {
+      "name": "pow",
+      "title": "pow",
+      "subtitle": "power meny list",
+      "description": "It lists the power menu available",
+      "mode": "view"
+    }
+  ],
+  "preferences": [],
+  "scripts": {
+    "build": "vici build",
+    "dev": "vici develop"
+  },
+  "dependencies": {
+    "@vicinae/api": "^0.8.2",
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2",
+    "@types/react": "^18.2.0"
+  }
+}
