@@ -8,7 +8,9 @@
   ],
   "scripts": {
     "build": "pnpm -r build",
+    "build:ext": "pnpm --filter",
     "dev": "pnpm -r dev",
+    "dev:ext": "pnpm --filter",
     "lint": "biome lint .",
     "lint:fix": "biome lint --write .",
     "format": "biome format .",
