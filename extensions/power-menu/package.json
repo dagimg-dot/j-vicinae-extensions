@@ -5,17 +5,66 @@
   "description": "Essential power commands at you fingertips!",
   "categories": [],
   "license": "MIT",
-  "author": "DagimAstatkie",
+  "author": "dagimg-dot",
   "contributors": [],
   "pastContributors": [],
   "icon": "extension_icon.png",
   "commands": [
     {
-      "name": "pow",
-      "title": "pow",
-      "subtitle": "power meny list",
-      "description": "It lists the power menu available",
-      "mode": "view"
+      "name": "poweroff",
+      "title": "Power Off",
+      "subtitle": "Shutdown the system",
+      "description": "Immediately powers off the computer",
+      "mode": "no-view"
+    },
+    {
+      "name": "reboot",
+      "title": "Reboot",
+      "subtitle": "Restart the system",
+      "description": "Immediately restarts the computer",
+      "mode": "no-view"
+    },
+    {
+      "name": "suspend",
+      "title": "Suspend",
+      "subtitle": "Put system to sleep",
+      "description": "Suspends the computer to RAM",
+      "mode": "no-view"
+    },
+    {
+      "name": "hibernate",
+      "title": "Hibernate",
+      "subtitle": "Save state and power off",
+      "description": "Saves system state to disk and powers off",
+      "mode": "no-view"
+    },
+    {
+      "name": "logout",
+      "title": "Logout",
+      "subtitle": "End current session",
+      "description": "Logs out the current user session",
+      "mode": "no-view"
+    },
+    {
+      "name": "lock-screen",
+      "title": "Lock Screen",
+      "subtitle": "Secure your session",
+      "description": "Locks the screen and requires password",
+      "mode": "no-view"
+    },
+    {
+      "name": "reboot-uefi",
+      "title": "Reboot to UEFI",
+      "subtitle": "Restart to firmware setup",
+      "description": "Reboots directly to UEFI/BIOS setup",
+      "mode": "no-view"
+    },
+    {
+      "name": "reboot-recovery",
+      "title": "Reboot to Recovery",
+      "subtitle": "Restart to recovery mode",
+      "description": "Reboots to system recovery mode",
+      "mode": "no-view"
     }
   ],
   "preferences": [],
@@ -29,6 +78,7 @@
   },
   "devDependencies": {
     "typescript": "^5.9.2",
-    "@types/react": "^18.2.0"
+    "@types/react": "^18.2.0",
+    "@types/node": "^20.0.0"
   }
 }
