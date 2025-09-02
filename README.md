@@ -7,6 +7,9 @@ A monorepo containing various extensions for [Vicinae](https://github.com/vicina
 ### 1. Power Menu
 Essential power commands at your fingertips! Provides quick access to system power management functions.
 
+### 2. GNOME Settings
+Access GNOME Control Center settings panels for easy access.
+
 ## Structure
 
 ```
