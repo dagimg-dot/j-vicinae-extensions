@@ -8,7 +8,7 @@
   "author": "dagimg-dot",
   "contributors": [],
   "pastContributors": [],
-  "icon": "extension_icon.png",
+  "icon": "power_menu.png",
   "commands": [
     {
       "name": "poweroff",
