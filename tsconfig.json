@@ -34,6 +34,9 @@
   "references": [
     {
       "path": "./extensions/power-menu"
+    },
+    {
+      "path": "./extensions/gnome-settings"
     }
   ]
 }
