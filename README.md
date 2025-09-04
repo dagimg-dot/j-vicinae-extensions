@@ -10,6 +10,9 @@ Essential power commands at your fingertips! Provides quick access to system pow
 ### 2. GNOME Settings
 Access GNOME Control Center settings panels for easy access.
 
+### 3. Floww
+Access [Floww CLI](https://github.com/dagimg-dot/floww) commands for easy access.
+
 ## Structure
 
 ```
@@ -17,6 +20,7 @@ j-vicinae-extensions/
 ├── extensions/
 │   └── power-menu/          # Power management extension
 |   └── gnome-settings/      # GNOME settings extension
+|   └── floww/               # Floww CLI extension
 ├── package.json             # Root package.json with workspace config
 ├── pnpm-workspace.yaml      # pnpm workspace configuration
 ├── tsconfig.json           # Root TypeScript configuration
