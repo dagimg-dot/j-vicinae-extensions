@@ -16,6 +16,7 @@ Access GNOME Control Center settings panels for easy access.
 j-vicinae-extensions/
 ├── extensions/
 │   └── power-menu/          # Power management extension
+|   └── gnome-settings/      # GNOME settings extension
 ├── package.json             # Root package.json with workspace config
 ├── pnpm-workspace.yaml      # pnpm workspace configuration
 ├── tsconfig.json           # Root TypeScript configuration
