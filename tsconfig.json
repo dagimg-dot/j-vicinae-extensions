@@ -37,6 +37,9 @@
     },
     {
       "path": "./extensions/gnome-settings"
+    }, 
+    {
+      "path": "./extensions/floww"
     }
   ]
 }
