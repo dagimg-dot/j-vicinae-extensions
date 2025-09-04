@@ -1,8 +1,7 @@
-import { readFile } from "node:fs/promises";
-import { Action, ActionPanel, Icon, List } from "@vicinae/api";
-import { useEffect, useState } from "react";
+import { Action, ActionPanel, Icon, List, showToast } from "@vicinae/api";
+import { useFileContent } from "../hooks/use-file-content";
+import { useWorkflows } from "../hooks/use-workflows";
 import type { Workflow } from "../types/workflow";
-import { validateWorkflow } from "../utils/floww-cli";
 
 interface WorkflowItemProps {
   workflow: Workflow;
@@ -11,39 +10,15 @@ interface WorkflowItemProps {
 }
 
 export function WorkflowItem({ workflow, onApply, id }: WorkflowItemProps) {
-  const [fileContent, setFileContent] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    const loadFileContent = async () => {
-      setIsLoading(true);
-      try {
-        const content = await readFile(workflow.filePath, "utf-8");
-        setFileContent(content);
-      } catch (err) {
-        console.error("Error loading file:", err);
-        setFileContent("Error loading file content");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadFileContent();
-  }, [workflow.filePath]);
+  const { content: fileContent, isLoading } = useFileContent(workflow.filePath);
+  const { validateWorkflow } = useWorkflows();
 
   const handleApply = async () => {
     await onApply(workflow.name);
   };
 
   const handleValidate = async () => {
-    try {
-      const isValid = await validateWorkflow(workflow.name);
-      if (isValid) {
-        // You could show a toast here if needed
-      }
-    } catch (_error) {
-      // Handle validation error
-    }
+    await validateWorkflow(workflow.name);
   };
 
   const getWorkflowIcon = (_workflow: Workflow) => {
@@ -103,7 +78,7 @@ ${fileContent}
             icon={Icon.Finder}
             onAction={() => {
               // This would need to be implemented with a proper file system action
-              console.log("Show in Finder:", workflow.filePath);
+              showToast({ title: "Show in Finder", message: "Feature not implemented yet" });
             }}
             shortcut={{ modifiers: ["cmd"], key: "f" }}
           />

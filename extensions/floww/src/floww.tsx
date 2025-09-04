@@ -1,50 +1,10 @@
 import { Action, ActionPanel, closeMainWindow, Icon, List, showToast } from "@vicinae/api";
-import { useEffect, useState } from "react";
 import { WorkflowItem } from "./components/WorkflowItem";
-import type { Workflow } from "./types/workflow";
-import { applyWorkflow, checkFlowwSetup, getWorkflows } from "./utils/floww-cli";
+import { useWorkflows } from "./hooks/use-workflows";
 
 export default function FlowwWorkflows() {
-  const [workflows, setWorkflows] = useState<Workflow[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [setupStatus, setSetupStatus] = useState<{
-    installed: boolean;
-    configExists: boolean;
-    workflowsExist: boolean;
-  } | null>(null);
-
-  const loadWorkflows = async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-
-      const status = await checkFlowwSetup();
-      setSetupStatus(status);
-
-      if (!status.installed) {
-        setError("Floww CLI is not installed. Please install it first.");
-        return;
-      }
-
-      if (!status.configExists) {
-        setError("Floww configuration not found. Please run 'floww init' first.");
-        return;
-      }
-
-      if (!status.workflowsExist) {
-        setError("No workflows directory found. Please run 'floww init' first.");
-        return;
-      }
-
-      const workflowsList = await getWorkflows();
-      setWorkflows(workflowsList);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load workflows");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { workflows, isLoading, error, setupStatus, refresh, applyWorkflow, showVersion } =
+    useWorkflows();
 
   const handleApplyWorkflow = async (workflowName: string) => {
     try {
@@ -60,13 +20,8 @@ export default function FlowwWorkflows() {
     }
   };
 
-  const handleRefresh = () => {
-    loadWorkflows();
-  };
-
   const handleInitFloww = async () => {
     try {
-      // This would require implementing a command execution utility
       await showToast({
         title: "Please run 'floww init' in terminal",
         message: "Initialize Floww configuration first",
@@ -75,10 +30,6 @@ export default function FlowwWorkflows() {
       // Handle error
     }
   };
-
-  useEffect(() => {
-    loadWorkflows();
-  }, []);
 
   if (isLoading) {
     return (
@@ -101,7 +52,8 @@ export default function FlowwWorkflows() {
           icon={Icon.ExclamationMark}
           actions={
             <ActionPanel>
-              <Action title="Refresh" icon={Icon.ArrowClockwise} onAction={handleRefresh} />
+              <Action title="Refresh" icon={Icon.ArrowClockwise} onAction={refresh} />
+              <Action title="Show Version" icon={Icon.Info} onAction={showVersion} />
               {setupStatus && !setupStatus.installed && (
                 <Action
                   title="Install Floww CLI"
@@ -128,7 +80,8 @@ export default function FlowwWorkflows() {
           icon={Icon.Plus}
           actions={
             <ActionPanel>
-              <Action title="Refresh" icon={Icon.ArrowClockwise} onAction={handleRefresh} />
+              <Action title="Refresh" icon={Icon.ArrowClockwise} onAction={refresh} />
+              <Action title="Show Version" icon={Icon.Info} onAction={showVersion} />
               <Action
                 title="Add Workflow"
                 icon={Icon.Plus}
