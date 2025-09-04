@@ -64,7 +64,7 @@ export const POWER_COMMANDS = {
   LOGOUT: {
     title: "Logging out...",
     message: "This will end your current session",
-    command: "gnome-session-quit --logout --no-prompt",
+    command: "loginctl terminate-user $(whoami)",
     errorMessage: "Failed to logout",
   },
   LOCK_SCREEN: {
