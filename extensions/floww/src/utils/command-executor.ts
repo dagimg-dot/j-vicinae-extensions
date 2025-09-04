@@ -1,8 +1,8 @@
 import { exec } from "node:child_process";
 import { promisify } from "node:util";
 import { showToast } from "@vicinae/api";
-import { FLOWW_CONFIG } from './constants';
-import { handleCommandError } from './error-handler';
+import { FLOWW_CONFIG } from "./constants";
+import { handleCommandError } from "./error-handler";
 
 const execAsync = promisify(exec);
 
