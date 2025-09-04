@@ -1,14 +1,14 @@
 {
   "$schema": "https://raw.githubusercontent.com/vicinaehq/vicinae/refs/heads/main/extra/schemas/extension.json",
   "name": "floww",
-  "title": "floww",
+  "title": "Floww",
   "description": "Vicinae extension for Floww CLI - manage and apply workflows across workspaces",
   "categories": [],
   "license": "MIT",
   "author": "dagimg-dot",
   "contributors": [],
   "pastContributors": [],
-  "icon": "extension_icon.png",
+  "icon": "floww.png",
   "commands": [
     {
       "name": "floww",
