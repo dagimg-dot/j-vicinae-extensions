@@ -69,6 +69,16 @@ importers:
         specifier: ^5.9.2
         version: 5.9.2
 
+  extensions/symbols:
+    dependencies:
+      '@vicinae/api':
+        specifier: ^0.8.5
+        version: 0.8.5(@types/node@20.19.11)(@types/react@18.3.24)(typescript@5.9.2)
+    devDependencies:
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.2
+
 packages:
 
   /@biomejs/biome@2.2.2:

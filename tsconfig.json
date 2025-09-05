@@ -40,6 +40,9 @@
     }, 
     {
       "path": "./extensions/floww"
+    },
+    {
+      "path": "./extensions/symbols"
     }
   ]
 }
