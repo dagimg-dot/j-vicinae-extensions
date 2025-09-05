@@ -88,7 +88,7 @@ export default function SymbolsGrid() {
               key={`pinned-${symbol.symbol}`}
               id={symbol.symbol}
               content={{
-                value: symbol.symbol,
+                source: `https://math.vercel.app?inline=${`⠀${symbol.symbol}⠀`}&color=white&backgroundColor=transparent&size=16&scale=0.5`,
                 tooltip: symbol.name,
               }}
               keywords={symbol.keywords}
@@ -128,7 +128,7 @@ export default function SymbolsGrid() {
               key={symbol.symbol}
               id={symbol.symbol}
               content={{
-                value: symbol.symbol,
+                source: `https://math.vercel.app?inline=${`⠀${symbol.symbol}⠀`}&color=white&backgroundColor=transparent&size=16&scale=0.5`,
                 tooltip: symbol.name,
               }}
               keywords={symbol.keywords}
@@ -167,7 +167,7 @@ export default function SymbolsGrid() {
               key={symbol.symbol}
               id={symbol.symbol}
               content={{
-                value: symbol.symbol,
+                source: `https://math.vercel.app?inline=${`⠀${symbol.symbol}⠀`}&color=white&backgroundColor=transparent&size=16&scale=0.5`,
                 tooltip: symbol.name,
               }}
               keywords={symbol.keywords}
@@ -206,7 +206,7 @@ export default function SymbolsGrid() {
               key={symbol.symbol}
               id={symbol.symbol}
               content={{
-                value: symbol.symbol,
+                source: `https://math.vercel.app?inline=${`⠀${symbol.symbol}⠀`}&color=white&backgroundColor=transparent&size=16&scale=0.5`,
                 tooltip: symbol.name,
               }}
               keywords={symbol.keywords}
@@ -245,7 +245,7 @@ export default function SymbolsGrid() {
               key={symbol.symbol}
               id={symbol.symbol}
               content={{
-                value: symbol.symbol,
+                source: `https://math.vercel.app?inline=${`⠀${symbol.symbol}⠀`}&color=white&backgroundColor=transparent&size=16&scale=0.5`,
                 tooltip: symbol.name,
               }}
               keywords={symbol.keywords}
