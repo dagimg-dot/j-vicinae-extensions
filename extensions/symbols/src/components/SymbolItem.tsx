@@ -24,7 +24,7 @@ export function SymbolItem({
       key={`${keyPrefix}${symbol.symbol}`}
       id={symbol.symbol}
       content={{
-        source: getSymbolImageUrl(symbol.symbol),
+        value: getSymbolImageUrl(symbol.symbol),
         tooltip: symbol.name,
       }}
       keywords={symbol.keywords}
