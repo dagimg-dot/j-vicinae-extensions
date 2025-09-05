@@ -87,7 +87,10 @@ export default function SymbolsGrid() {
             <Grid.Item
               key={`pinned-${symbol.symbol}`}
               id={symbol.symbol}
-              content={symbol.symbol}
+              content={{
+                value: symbol.symbol,
+                tooltip: symbol.name,
+              }}
               keywords={symbol.keywords}
               actions={
                 <ActionPanel>
@@ -124,7 +127,10 @@ export default function SymbolsGrid() {
             <Grid.Item
               key={symbol.symbol}
               id={symbol.symbol}
-              content={symbol.symbol}
+              content={{
+                value: symbol.symbol,
+                tooltip: symbol.name,
+              }}
               keywords={symbol.keywords}
               actions={
                 <ActionPanel>
@@ -160,7 +166,10 @@ export default function SymbolsGrid() {
             <Grid.Item
               key={symbol.symbol}
               id={symbol.symbol}
-              content={symbol.symbol}
+              content={{
+                value: symbol.symbol,
+                tooltip: symbol.name,
+              }}
               keywords={symbol.keywords}
               actions={
                 <ActionPanel>
@@ -196,7 +205,10 @@ export default function SymbolsGrid() {
             <Grid.Item
               key={symbol.symbol}
               id={symbol.symbol}
-              content={symbol.symbol}
+              content={{
+                value: symbol.symbol,
+                tooltip: symbol.name,
+              }}
               keywords={symbol.keywords}
               actions={
                 <ActionPanel>
@@ -232,7 +244,10 @@ export default function SymbolsGrid() {
             <Grid.Item
               key={symbol.symbol}
               id={symbol.symbol}
-              content={symbol.symbol}
+              content={{
+                value: symbol.symbol,
+                tooltip: symbol.name,
+              }}
               keywords={symbol.keywords}
               actions={
                 <ActionPanel>
