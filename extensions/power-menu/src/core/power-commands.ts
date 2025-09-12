@@ -1,36 +1,57 @@
 import { exec } from "node:child_process";
 import { promisify } from "node:util";
-import { closeMainWindow, getPreferenceValues, showToast } from "@vicinae/api";
+import {
+  Alert,
+  closeMainWindow,
+  confirmAlert,
+  getPreferenceValues,
+  showToast,
+  Toast,
+} from "@vicinae/api";
 
 const execAsync = promisify(exec);
 
 interface PowerCommandOptions {
   title: string;
+  loading: string;
   message: string;
   command: string;
   errorMessage: string;
 }
 
-export async function executePowerCommand({
+export async function executePowerCommandWithConfirmation({
   title,
+  loading,
   message,
   command,
   errorMessage,
 }: PowerCommandOptions): Promise<void> {
   try {
-    // Show confirmation dialog
-    await showToast({
-      title,
+    const confirmed = await confirmAlert({
+      title: `Confirm ${loading}`,
       message,
+      primaryAction: {
+        title,
+        style: Alert.ActionStyle.Destructive,
+      },
     });
 
-    // Execute the primary command
+    if (!confirmed) {
+      return;
+    }
+
+    await showToast({
+      title: loading,
+      style: Toast.Style.Success,
+    });
+
     await execAsync(command);
     await closeMainWindow();
   } catch (error) {
     await showToast({
       title: "Error",
       message: `${errorMessage}: ${error instanceof Error ? error.message : String(error)}`,
+      style: Toast.Style.Failure,
     });
   }
 }
@@ -39,20 +60,21 @@ export async function executePowerCommand({
 // Dynamic command functions for DE-specific operations
 export async function getLockCommand(): Promise<string> {
   const prefs = getPreferenceValues();
-  return prefs["lock-command"] || "loginctl lock-session";
+  return prefs["lock-command"] || POWER_COMMANDS.LOCK_SCREEN.command;
 }
 
 export async function getLogoutCommand(): Promise<string> {
   const prefs = getPreferenceValues();
-  return prefs["logout-command"] || "gnome-session-quit --logout";
+  return prefs["logout-command"] || POWER_COMMANDS.LOGOUT.command;
 }
 
 // Functions to execute dynamic commands
 export async function executeLockScreen(): Promise<void> {
   const command = await getLockCommand();
-  await executePowerCommand({
-    title: "Locking screen...",
-    message: "Securing your session",
+  await executePowerCommandWithConfirmation({
+    title: "Lock Screen",
+    loading: "Locking screen...",
+    message: "This will lock your screen and require authentication to unlock",
     command,
     errorMessage: "Failed to lock screen",
   });
@@ -60,9 +82,10 @@ export async function executeLockScreen(): Promise<void> {
 
 export async function executeLogout(): Promise<void> {
   const command = await getLogoutCommand();
-  await executePowerCommand({
-    title: "Logging out...",
-    message: "This will end your current session",
+  await executePowerCommandWithConfirmation({
+    title: "Logout",
+    loading: "Logging out...",
+    message: "This will end your current session and close all applications",
     command,
     errorMessage: "Failed to logout",
   });
@@ -70,49 +93,57 @@ export async function executeLogout(): Promise<void> {
 
 export const POWER_COMMANDS = {
   POWEROFF: {
-    title: "Powering off system...",
+    title: "Power Off",
+    loading: "Powering off system...",
     message: "This will shut down your computer immediately",
     command: "systemctl poweroff",
     errorMessage: "Failed to power off",
   },
   REBOOT: {
-    title: "Rebooting system...",
+    title: "Reboot",
+    loading: "Rebooting system...",
     message: "This will restart your computer immediately",
     command: "systemctl reboot",
     errorMessage: "Failed to reboot",
   },
   SUSPEND: {
-    title: "Suspending system...",
+    title: "Suspend",
+    loading: "Suspending system...",
     message: "Putting computer to sleep",
     command: "systemctl suspend",
     errorMessage: "Failed to suspend",
   },
   HIBERNATE: {
-    title: "Hibernating system...",
+    title: "Hibernate",
+    loading: "Hibernating system...",
     message: "Saving state to disk and powering off",
     command: "systemctl hibernate",
     errorMessage: "Failed to hibernate",
   },
   LOGOUT: {
-    title: "Logging out...",
+    title: "Logout",
+    loading: "Logging out...",
     message: "This will end your current session",
-    command: "gnome-session-quit --logout",
+    command: "gnome-session-quit --logout --no-prompt",
     errorMessage: "Failed to logout",
   },
   LOCK_SCREEN: {
-    title: "Locking screen...",
+    title: "Lock Screen",
+    loading: "Locking screen...",
     message: "Securing your session",
     command: "loginctl lock-session",
     errorMessage: "Failed to lock screen",
   },
   REBOOT_UEFI: {
-    title: "Rebooting to UEFI...",
+    title: "Reboot to UEFI",
+    loading: "Rebooting to UEFI...",
     message: "Restarting to firmware setup",
     command: "systemctl reboot --firmware-setup",
     errorMessage: "Failed to reboot to UEFI",
   },
   REBOOT_RECOVERY: {
-    title: "Rebooting to Recovery...",
+    title: "Reboot to Recovery",
+    loading: "Rebooting to Recovery...",
     message: "Restarting to recovery mode",
     command: "systemctl reboot --boot-loader-entry=auto-windows",
     errorMessage: "Failed to reboot to recovery",

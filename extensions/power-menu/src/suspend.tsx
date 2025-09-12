@@ -1,5 +1,5 @@
-import { executePowerCommand, POWER_COMMANDS } from "./core/power-commands";
+import { executePowerCommandWithConfirmation, POWER_COMMANDS } from "./core/power-commands";
 
 export default async function Suspend() {
-  await executePowerCommand(POWER_COMMANDS.SUSPEND);
+  await executePowerCommandWithConfirmation(POWER_COMMANDS.SUSPEND);
 }

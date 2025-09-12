@@ -92,7 +92,7 @@
       "description": "Choose how to log out of your session",
       "required": false,
       "type": "dropdown",
-      "default": "gnome-session-quit --logout",
+      "default": "gnome-session-quit --logout --no-prompt",
       "data": [
         {
           "title": "Hyprland",
@@ -100,7 +100,7 @@
         },
         {
           "title": "Gnome",
-          "value": "gnome-session-quit --logout"
+          "value": "gnome-session-quit --logout --no-prompt"
         },
         {
           "title": "KDE",

@@ -1,5 +1,5 @@
-import { executePowerCommand, POWER_COMMANDS } from "./core/power-commands";
+import { executePowerCommandWithConfirmation, POWER_COMMANDS } from "./core/power-commands";
 
 export default async function PowerOff() {
-  await executePowerCommand(POWER_COMMANDS.POWEROFF);
+  await executePowerCommandWithConfirmation(POWER_COMMANDS.POWEROFF);
 }
