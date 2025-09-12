@@ -1,6 +1,6 @@
 import { exec } from "node:child_process";
 import { promisify } from "node:util";
-import { closeMainWindow, showToast } from "@vicinae/api";
+import { closeMainWindow, getPreferenceValues, showToast } from "@vicinae/api";
 
 const execAsync = promisify(exec);
 
@@ -36,6 +36,38 @@ export async function executePowerCommand({
 }
 
 // Predefined power commands
+// Dynamic command functions for DE-specific operations
+export async function getLockCommand(): Promise<string> {
+  const prefs = getPreferenceValues();
+  return prefs["lock-command"] || "loginctl lock-session";
+}
+
+export async function getLogoutCommand(): Promise<string> {
+  const prefs = getPreferenceValues();
+  return prefs["logout-command"] || "gnome-session-quit --logout";
+}
+
+// Functions to execute dynamic commands
+export async function executeLockScreen(): Promise<void> {
+  const command = await getLockCommand();
+  await executePowerCommand({
+    title: "Locking screen...",
+    message: "Securing your session",
+    command,
+    errorMessage: "Failed to lock screen",
+  });
+}
+
+export async function executeLogout(): Promise<void> {
+  const command = await getLogoutCommand();
+  await executePowerCommand({
+    title: "Logging out...",
+    message: "This will end your current session",
+    command,
+    errorMessage: "Failed to logout",
+  });
+}
+
 export const POWER_COMMANDS = {
   POWEROFF: {
     title: "Powering off system...",

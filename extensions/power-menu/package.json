@@ -67,7 +67,48 @@
       "mode": "no-view"
     }
   ],
-  "preferences": [],
+  "preferences": [
+    {
+      "name": "lock-command",
+      "title": "Lock Screen Command",
+      "description": "Choose how to lock your screen",
+      "required": false,
+      "type": "dropdown",
+      "default": "loginctl lock-session",
+      "data": [
+        {
+          "title": "hyprlock",
+          "value": "hyprlock"
+        },
+        {
+          "title": "loginctl",
+          "value": "loginctl lock-session"
+        }
+      ]
+    },
+    {
+      "name": "logout-command",
+      "title": "Log Out Command",
+      "description": "Choose how to log out of your session",
+      "required": false,
+      "type": "dropdown",
+      "default": "gnome-session-quit --logout",
+      "data": [
+        {
+          "title": "Hyprland",
+          "value": "hyprctl dispatch exit"
+        },
+        {
+          "title": "Gnome",
+          "value": "gnome-session-quit --logout"
+        },
+        {
+          "title": "KDE",
+          "value": "qdbus org.kde.ksmserver /KSMServer logout 0 0 1"
+        }
+      ]
+    }
+  ],
   "scripts": {
     "build": "vici build",
     "dev": "vici develop"
