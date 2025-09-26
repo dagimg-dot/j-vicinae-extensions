@@ -1,2 +1,6 @@
 packages:
-  - 'extensions/*'
+  - extensions/*
+
+ignoredBuiltDependencies:
+  - esbuild
+  - yarn

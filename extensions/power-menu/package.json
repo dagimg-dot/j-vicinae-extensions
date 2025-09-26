@@ -114,7 +114,7 @@
     "dev": "vici develop"
   },
   "dependencies": {
-    "@vicinae/api": "^0.8.2",
+    "@vicinae/api": "^0.12.2",
     "react": "^18.2.0"
   },
   "devDependencies": {
