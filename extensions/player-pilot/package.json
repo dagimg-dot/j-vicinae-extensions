@@ -11,8 +11,8 @@
   "icon": "player_pilot.png",
   "commands": [
     {
-      "name": "player-view",
-      "title": "Player View",
+      "name": "player-pilot",
+      "title": "Player Pilot",
       "subtitle": "Control multiple media players with grid view",
       "description": "View and control all your media players in a beautiful grid interface. Supports filtering by specific players, shows metadata, and provides individual controls for each player.",
       "mode": "view"
