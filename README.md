@@ -2,76 +2,85 @@
 
 A monorepo containing various extensions for [Vicinae](https://github.com/vicinaehq/vicinae)
 
-## Extensions
+## 🚀 Extensions
 
-### 1. Power Menu
-Essential power commands at your fingertips! Provides quick access to system power management functions.
+<div align="center">
 
-### 2. GNOME Settings
-Access GNOME Control Center settings panels for easy access.
+| [<img src="extensions/power-menu/assets/power_menu.png" width="120" alt="Power Menu">](extensions/power-menu/) | [<img src="extensions/gnome-settings/assets/gnome_settings.png" width="120" alt="GNOME Settings">](extensions/gnome-settings/) | [<img src="extensions/floww/assets/floww.png" width="120" alt="Floww">](extensions/floww/) |
+| :------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------: |
+|                                                 **Power Menu**                                                 |                                                       **GNOME Settings**                                                       |                                         **Floww**                                          |
+|                                  Essential power commands at your fingertips!                                  |                                          Lists and opens GNOME Control Center panels                                           |                        Manage and apply workflows across workspaces                        |
 
-### 3. Floww
-Access [Floww CLI](https://github.com/dagimg-dot/floww) commands for easy access.
+| [<img src="extensions/symbols/assets/symbols.png" width="120" alt="Symbols">](extensions/symbols/) | [<img src="extensions/player-pilot/assets/player_pilot.png" width="120" alt="Player Pilot">](extensions/player-pilot/) |       |
+| :------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------: | :---: |
+|                                            **Symbols**                                             |                                                    **Player Pilot**                                                    |       |
+|                          Grid-based symbol picker for special characters                           |                                         Comprehensive media player controller                                          |       |
 
-## Structure
+</div>
 
-```
-j-vicinae-extensions/
-├── extensions/
-│   └── power-menu/          # Power management extension
-|   └── gnome-settings/      # GNOME settings extension
-|   └── floww/               # Floww CLI extension
-├── package.json             # Root package.json with workspace config
-├── pnpm-workspace.yaml      # pnpm workspace configuration
-├── tsconfig.json           # Root TypeScript configuration
-└── README.md               # This file
-```
+## 📋 Features Overview
 
-## Getting Started
+### 🔋 Power Menu
+- **8 Power Commands**: Power off, reboot, suspend, hibernate, logout, lock screen, UEFI boot, recovery mode
+- **Customizable**: Configure lock and logout commands for different desktop environments
+- **Quick Access**: Essential system controls at your fingertips
+
+### ⚙️ GNOME Settings
+- **Direct Access**: Open any GNOME Control Center panel directly
+- **Organized**: Categorized settings for easy navigation
+- **Searchable**: Find settings quickly with built-in search
+
+### 🔄 Floww
+- **Workflow Management**: List, search, and apply Floww workflows
+- **Workspace Automation**: Streamline your development workflow
+- **CLI Integration**: Seamless integration with Floww CLI
+
+### 🔤 Symbols
+- **Grid Interface**: Beautiful emoji picker-like interface
+- **Categorized**: Organized by categories (arrows, currency, math, etc.)
+- **Pinned Symbols**: Quick access to frequently used symbols
+- **Search**: Find symbols quickly with search functionality
+
+### 🎵 Player Pilot
+- **Grid View**: See all media players in a clean, organized grid
+- **Smart Filtering**: Filter players by name using preferences
+- **Real-time Status**: Shows playing, paused, and stopped states
+- **Rich Metadata**: Displays album art, song titles, artists, and albums
+- **Individual Controls**: Play/pause, next, previous, and stop for each player
+
+## 🛠️ Development
 
 ### Prerequisites
-
 - Node.js 18+
 - pnpm
 
 ### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone <your-repo-url>
-   cd j-vicinae-extensions
-   ```
-
-2. Install dependencies:
-   ```bash
-   pnpm install
-   ```
-
-### Development
-
-#### Working with All Extensions
-- **Build all extensions**: `pnpm build`
-- **Lint and format**: `pnpm check` (check only) or `pnpm check:fix` (auto-fix)
-- **Format only**: `pnpm format` (check only) or `pnpm format:fix` (auto-fix)
-- **Lint only**: `pnpm lint` (check only) or `pnpm lint:fix` (auto-fix)
-
-**Examples:**
 ```bash
-pnpm --filter power-menu build
+git clone <your-repo-url>
+cd j-vicinae-extensions
+pnpm install
 ```
 
-### Individual Extension Development
+### Commands
+- **Build all**: `pnpm build`
+- **Build specific**: `pnpm --filter <extension-name> build`
+- **Dev mode**: `pnpm --filter <extension-name> dev`
+- **Lint & format**: `pnpm check:fix`
 
-#### Using pnpm --filter (Recommended)
-Stay in the root directory and use pnpm's built-in filtering:
-
-```bash
-# Build a specific extension
-pnpm --filter power-menu build
-
-# Start development mode for a specific extension
-pnpm --filter power-menu dev
-
-# Check and fix code quality
-pnpm run check:fix
+### Structure
 ```
+j-vicinae-extensions/
+├── extensions/
+│   ├── power-menu/          # Power management commands
+│   ├── gnome-settings/      # GNOME Control Center access
+│   ├── floww/               # Floww CLI integration
+│   ├── symbols/             # Symbol picker
+│   └── player-pilot/        # Media player controller
+├── package.json
+├── pnpm-workspace.yaml
+└── tsconfig.json
+```
+
+## 📝 License
+
+MIT © dagimg-dot
