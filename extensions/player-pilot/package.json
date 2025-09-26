@@ -8,7 +8,7 @@
   "author": "dagimg-dot",
   "contributors": [],
   "pastContributors": [],
-  "icon": "headphones.png",
+  "icon": "player_pilot.png",
   "commands": [
     {
       "name": "player-view",
