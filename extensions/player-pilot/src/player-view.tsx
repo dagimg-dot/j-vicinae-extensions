@@ -7,6 +7,7 @@ export default function PlayerInfo() {
   const [players, setPlayers] = useState<PlayerInfoType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedPlayer, setSelectedPlayer] = useState<string | null>(null);
+  const [columns, setColumns] = useState(2);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -15,6 +16,11 @@ export default function PlayerInfo() {
       try {
         const data = await getAllPlayers();
         setPlayers(data);
+        if (data.length <= 2) {
+          setColumns(2);
+        } else {
+          setColumns(3);
+        }
 
         // Auto-select first player if none selected
         if (data.length > 0 && !selectedPlayer) {
@@ -71,13 +77,18 @@ export default function PlayerInfo() {
   return (
     <Grid
       searchBarPlaceholder="Search players..."
-      columns={players.length}
+      columns={columns}
       aspectRatio="3/2"
       inset={Grid.Inset.Small}
       navigationTitle={selectedPlayer ? `Players - ${selectedPlayer}` : "Media Players"}
       onSelectionChange={setSelectedPlayer}
     >
-      <Grid.Section title="Media Players" columns={players.length} aspectRatio="3/2" inset={Grid.Inset.Small}>
+      <Grid.Section
+        title="Media Players"
+        columns={columns}
+        aspectRatio="3/2"
+        inset={Grid.Inset.Small}
+      >
         {players.map((player) => {
           const subtitle =
             player.metadata?.title && player.metadata?.artist

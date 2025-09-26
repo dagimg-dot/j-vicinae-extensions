@@ -1,5 +1,6 @@
 import { exec } from "node:child_process";
 import { promisify } from "node:util";
+import { getPreferenceValues } from "@vicinae/api";
 
 const execAsync = promisify(exec);
 
@@ -74,14 +75,41 @@ export async function getPlayerMetadata(player: string): Promise<PlayerMetadata 
 
 export async function getAllPlayers(): Promise<PlayerInfo[]> {
   try {
+    // Get preference for which players to control
+    const preferences = getPreferenceValues();
+    const preferredPlayers = preferences["playerctl-players"] as string;
+
     // Get list of all players
     const playersRaw = await execAsync("playerctl --list-all");
-    const playerNames = playersRaw.stdout
+    const allPlayerNames = playersRaw.stdout
       .trim()
       .split("\n")
       .filter((name) => name.length > 0);
 
+    if (allPlayerNames.length === 0) {
+      return [];
+    }
+
+    // Filter players based on preference
+    let playerNames: string[];
+    if (preferredPlayers === "%any") {
+      // Show all players
+      playerNames = allPlayerNames;
+    } else {
+      // Filter by preferred players
+      const preferredList = preferredPlayers.split(",").map((p) => p.trim());
+      playerNames = allPlayerNames.filter((name) => {
+        // Check if player name matches any preferred player (supports partial matching)
+        return preferredList.some(
+          (preferred) =>
+            name.toLowerCase().includes(preferred.toLowerCase()) ||
+            preferred.toLowerCase().includes(name.toLowerCase())
+        );
+      });
+    }
+
     if (playerNames.length === 0) {
+      console.warn(`No players found matching preference: ${preferredPlayers}`);
       return [];
     }
 

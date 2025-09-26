@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/vicinaehq/vicinae/refs/heads/main/extra/schemas/extension.json",
   "name": "player-pilot",
   "title": "Player Pilot",
-  "description": "A wrapper for playerctl to control the current music player.",
+  "description": "A comprehensive media player controller supporting multiple players with grid view, metadata display, and customizable player filtering.",
   "categories": [],
   "license": "MIT",
   "author": "dagimg-dot",
@@ -13,8 +13,8 @@
     {
       "name": "player-view",
       "title": "Player View",
-      "subtitle": "Info and actions for the current player",
-      "description": "Provides info on the current player, and allows actions, such as play, pause, next, fast forward, etc.",
+      "subtitle": "Control multiple media players with grid view",
+      "description": "View and control all your media players in a beautiful grid interface. Supports filtering by specific players, shows metadata, and provides individual controls for each player.",
       "mode": "view"
     }
   ],
@@ -22,7 +22,7 @@
     {
       "name": "playerctl-players",
       "title": "Playerctl Players",
-      "description": "A comma separated list of names of players to control (ex: spotify,mpd,vlc,%any)",
+      "description": "Comma-separated list of players to show. Use '%any' for all players, or specify names like 'spotify,brave,vlc' without the quotes to filter specific players.",
       "default": "%any",
       "type": "textfield",
       "required": true
