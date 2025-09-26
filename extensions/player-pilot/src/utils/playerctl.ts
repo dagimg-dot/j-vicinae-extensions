@@ -118,7 +118,11 @@ export async function getAllPlayers(): Promise<PlayerInfo[]> {
       }
     }
 
-    return players;
+    // Sort players: playing first, then paused, then stopped
+    return players.sort((a, b) => {
+      const statusOrder = { Playing: 0, Paused: 1, Stopped: 2 };
+      return statusOrder[a.status] - statusOrder[b.status];
+    });
   } catch (error) {
     if (error instanceof Error && error.message.includes("No players found")) {
       console.warn("No media players found. Make sure a media player is running.");
