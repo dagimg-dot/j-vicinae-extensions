@@ -43,6 +43,9 @@
     },
     {
       "path": "./extensions/symbols"
+    },
+    {
+      "path": "./extensions/player-pilot"
     }
   ]
 }

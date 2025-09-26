@@ -1,0 +1,41 @@
+{
+  "$schema": "https://raw.githubusercontent.com/vicinaehq/vicinae/refs/heads/main/extra/schemas/extension.json",
+  "name": "player-pilot",
+  "title": "Player Pilot",
+  "description": "A wrapper for playerctl to control the current music player.",
+  "categories": [],
+  "license": "MIT",
+  "author": "dagimg-dot",
+  "contributors": [],
+  "pastContributors": [],
+  "icon": "headphones.png",
+  "commands": [
+    {
+      "name": "player-view",
+      "title": "Player View",
+      "subtitle": "Info and actions for the current player",
+      "description": "Provides info on the current player, and allows actions, such as play, pause, next, fast forward, etc.",
+      "mode": "view"
+    }
+  ],
+  "preferences": [
+    {
+      "name": "playerctl-players",
+      "title": "Playerctl Players",
+      "description": "A comma separated list of names of players to control (ex: spotify,mpd,vlc,%any)",
+      "default": "%any",
+      "type": "textfield",
+      "required": true
+    }
+  ],
+  "scripts": {
+    "build": "vici build",
+    "dev": "vici develop"
+  },
+  "dependencies": {
+    "@vicinae/api": "^0.12.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  }
+}
