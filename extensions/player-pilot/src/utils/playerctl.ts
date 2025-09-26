@@ -16,6 +16,7 @@ export type PlayerMetadata = {
 
 export type PlayerInfo = {
   name: string;
+  displayName: string;
   status: "Playing" | "Paused" | "Stopped";
   metadata: PlayerMetadata | null;
 };
@@ -92,6 +93,13 @@ export async function getAllPlayers(): Promise<PlayerInfo[]> {
         const statusRaw = await execAsync(`playerctl --player ${playerName} status`);
         const status = statusRaw.stdout.trim() as "Playing" | "Paused" | "Stopped";
 
+        // Create display name: capitalize first letter and take first part before dots
+        const displayName =
+          playerName
+            .split(".")[0] // Take first part before any dots
+            .charAt(0)
+            .toUpperCase() + playerName.split(".")[0].slice(1).toLowerCase();
+
         // Get metadata if player is playing or paused
         let metadata: PlayerMetadata | null = null;
         if (status === "Playing" || status === "Paused") {
@@ -100,6 +108,7 @@ export async function getAllPlayers(): Promise<PlayerInfo[]> {
 
         players.push({
           name: playerName,
+          displayName,
           status,
           metadata,
         });

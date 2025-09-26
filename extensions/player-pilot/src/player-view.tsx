@@ -18,7 +18,7 @@ export default function PlayerInfo() {
 
         // Auto-select first player if none selected
         if (data.length > 0 && !selectedPlayer) {
-          setSelectedPlayer(data[0].name);
+          setSelectedPlayer(data[0].displayName);
         }
       } catch (e) {
         console.error("Failed to load players", e);
@@ -32,12 +32,14 @@ export default function PlayerInfo() {
     return () => clearInterval(interval);
   }, [selectedPlayer]);
 
-  const handlePlayerAction = (playerName: string, action: string) => {
-    exec(`playerctl --player ${playerName} ${action}`, (err, _stdout) => {
+  const handlePlayerAction = (player: PlayerInfoType, action: string) => {
+    const actionDisplay = action.charAt(0).toUpperCase() + action.slice(1);
+
+    exec(`playerctl --player ${player.name} ${action}`, (err, _stdout) => {
       if (err) {
-        showToast(Toast.Style.Failure, `Failed to ${action} on ${playerName}`);
+        showToast(Toast.Style.Failure, `Failed to ${actionDisplay} on ${player.displayName}`);
       } else {
-        showToast(Toast.Style.Success, `${action} executed on ${playerName}`);
+        showToast(Toast.Style.Success, `${actionDisplay} executed on ${player.displayName}`);
       }
     });
   };
@@ -69,46 +71,55 @@ export default function PlayerInfo() {
   return (
     <Grid
       searchBarPlaceholder="Search players..."
-      columns={2}
-      aspectRatio="16/9"
+      columns={players.length}
+      aspectRatio="3/2"
       inset={Grid.Inset.Small}
       navigationTitle={selectedPlayer ? `Players - ${selectedPlayer}` : "Media Players"}
       onSelectionChange={setSelectedPlayer}
     >
-      <Grid.Section title="Media Players" columns={2} aspectRatio="16/9" inset={Grid.Inset.Small}>
-        {players.map((player) => (
-          <Grid.Item
-            key={player.name}
-            id={player.name}
-            title={player.name}
-            subtitle={player.metadata?.title || player.status}
-            content={player.metadata?.albumArt || Icon.Music}
-            actions={
-              <ActionPanel>
-                <Action
-                  title="Play/Pause"
-                  icon={player.status === "Playing" ? Icon.Pause : Icon.Play}
-                  onAction={() => handlePlayerAction(player.name, "play-pause")}
-                />
-                <Action
-                  title="Next"
-                  icon={Icon.Forward}
-                  onAction={() => handlePlayerAction(player.name, "next")}
-                />
-                <Action
-                  title="Previous"
-                  icon={Icon.Rewind}
-                  onAction={() => handlePlayerAction(player.name, "previous")}
-                />
-                <Action
-                  title="Stop"
-                  icon={Icon.Stop}
-                  onAction={() => handlePlayerAction(player.name, "stop")}
-                />
-              </ActionPanel>
-            }
-          />
-        ))}
+      <Grid.Section title="Media Players" columns={players.length} aspectRatio="3/2" inset={Grid.Inset.Small}>
+        {players.map((player) => {
+          const subtitle =
+            player.metadata?.title && player.metadata?.artist
+              ? `${player.metadata.title} - ${player.metadata.artist} - ${player.metadata.album}`
+              : player.status;
+
+          return (
+            <Grid.Item
+              key={player.name}
+              id={player.displayName}
+              title={player.displayName}
+              subtitle={subtitle}
+              content={player.metadata?.albumArt || Icon.Music}
+              actions={
+                <ActionPanel>
+                  <Action
+                    title={player.status === "Playing" ? "Pause" : "Play"}
+                    icon={player.status === "Playing" ? Icon.Pause : Icon.Play}
+                    onAction={() =>
+                      handlePlayerAction(player, player.status === "Playing" ? "pause" : "play")
+                    }
+                  />
+                  <Action
+                    title={player.status === "Playing" ? "Next" : "Play Next"}
+                    icon={Icon.Forward}
+                    onAction={() => handlePlayerAction(player, "next")}
+                  />
+                  <Action
+                    title={player.status === "Playing" ? "Previous" : "Play Previous"}
+                    icon={Icon.Rewind}
+                    onAction={() => handlePlayerAction(player, "previous")}
+                  />
+                  <Action
+                    title="Stop"
+                    icon={Icon.Stop}
+                    onAction={() => handlePlayerAction(player, "stop")}
+                  />
+                </ActionPanel>
+              }
+            />
+          );
+        })}
       </Grid.Section>
     </Grid>
   );
