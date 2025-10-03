@@ -11,10 +11,10 @@ A monorepo containing various extensions for [Vicinae](https://github.com/vicina
 |                                                 **Power Menu**                                                 |                                                       **GNOME Settings**                                                       |                                         **Floww**                                          |
 |                                  Essential power commands at your fingertips!                                  |                                          Lists and opens GNOME Control Center panels                                           |                        Manage and apply workflows across workspaces                        |
 
-| [<img src="extensions/symbols/assets/symbols.png" width="120" alt="Symbols">](extensions/symbols/) | [<img src="extensions/player-pilot/assets/player_pilot.png" width="120" alt="Player Pilot">](extensions/player-pilot/) |       |
-| :------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------: | :---: |
-|                                            **Symbols**                                             |                                                    **Player Pilot**                                                    |       |
-|                          Grid-based symbol picker for special characters                           |                                         Comprehensive media player controller                                          |       |
+| [<img src="extensions/player-pilot/assets/player_pilot.png" width="120" alt="Player Pilot">](extensions/player-pilot/) |       |
+| :--------------------------------------------------------------------------------------------------------------------: | :---: |
+|                                                    **Player Pilot**                                                    |       |
+|                                         Comprehensive media player controller                                          |       |
 
 </div>
 
@@ -34,12 +34,6 @@ A monorepo containing various extensions for [Vicinae](https://github.com/vicina
 - **Workflow Management**: List, search, and apply Floww workflows
 - **Workspace Automation**: Streamline your development workflow
 - **CLI Integration**: Seamless integration with Floww CLI
-
-### 🔤 Symbols
-- **Grid Interface**: Beautiful emoji picker-like interface
-- **Categorized**: Organized by categories (arrows, currency, math, etc.)
-- **Pinned Symbols**: Quick access to frequently used symbols
-- **Search**: Find symbols quickly with search functionality
 
 ### 🎵 Player Pilot
 - **Grid View**: See all media players in a clean, organized grid
@@ -74,7 +68,6 @@ j-vicinae-extensions/
 │   ├── power-menu/          # Power management commands
 │   ├── gnome-settings/      # GNOME Control Center access
 │   ├── floww/               # Floww CLI integration
-│   ├── symbols/             # Symbol picker
 │   └── player-pilot/        # Media player controller
 ├── package.json
 ├── pnpm-workspace.yaml
