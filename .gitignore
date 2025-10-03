@@ -77,3 +77,6 @@ public
 # Temporary folders
 tmp/
 temp/
+
+# Undone Projects
+extensions/symbols/
