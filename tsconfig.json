@@ -42,9 +42,6 @@
       "path": "./extensions/floww"
     },
     {
-      "path": "./extensions/symbols"
-    },
-    {
       "path": "./extensions/player-pilot"
     }
   ]
