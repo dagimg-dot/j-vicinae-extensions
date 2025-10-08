@@ -1,26 +1,14 @@
 import { Action, ActionPanel, Color, Icon, List, showToast } from "@vicinae/api";
 import { useEffect, useState } from "react";
 import { executeNmcliCommand, executeNmcliCommandSilent } from "./utils/execute";
-
-interface SavedNetwork {
-  name: string;
-  uuid: string;
-  type: string;
-  device: string;
-  state: string;
-}
-
-interface CurrentConnection {
-  name: string;
-  device: string;
-}
-
-interface WifiDevice {
-  name: string;
-  type: string;
-  state: string;
-  connection: string;
-}
+import {
+  type CurrentConnection,
+  loadCurrentConnection,
+  loadWifiDevice,
+  parseWifiList,
+  type SavedNetwork,
+  type WifiDevice,
+} from "./utils/wifi-helpers";
 
 interface SavedNetworksResult {
   networks: SavedNetwork[];
@@ -60,48 +48,28 @@ export default function ManageSavedNetworks() {
   });
   const [currentConnection, setCurrentConnection] = useState<CurrentConnection | null>(null);
   const [wifiDevice, setWifiDevice] = useState<WifiDevice | null>(null);
+  const [availableNetworks, setAvailableNetworks] = useState<string[]>([]);
 
-  const loadWifiDevice = async () => {
-    try {
-      const result = await executeNmcliCommandSilent("device status");
-      if (result.success) {
-        const lines = result.stdout.split("\n").filter((line) => line.trim());
-        const wifiDeviceLine = lines.find((line) => line.includes("wifi"));
-        if (wifiDeviceLine) {
-          const parts = wifiDeviceLine.split(/\s{2,}/);
-          if (parts.length >= 4) {
-            setWifiDevice({
-              name: parts[0] || "",
-              type: parts[1] || "",
-              state: parts[2] || "",
-              connection: parts[3] || "",
-            });
-          }
-        }
-      }
-    } catch (error) {
-      console.error("Failed to load Wi-Fi device:", error);
-    }
+  const loadWifiDeviceData = async () => {
+    const device = await loadWifiDevice();
+    setWifiDevice(device);
   };
 
-  const loadCurrentConnection = async () => {
+  const loadCurrentConnectionData = async () => {
+    const connection = await loadCurrentConnection();
+    setCurrentConnection(connection);
+  };
+
+  const loadAvailableNetworks = async () => {
     try {
-      const result = await executeNmcliCommandSilent("connection show --active");
+      const result = await executeNmcliCommandSilent("device wifi list --rescan yes");
       if (result.success) {
-        const lines = result.stdout.split("\n").filter((line) => line.trim());
-        if (lines.length > 1) {
-          const firstLine = lines[1];
-          const parts = firstLine.split(/\s{2,}/);
-          if (parts.length >= 4) {
-            setCurrentConnection({
-              name: parts[0] || "",
-              device: parts[3] || "",
-            });
-          }
-        }
+        const networks = parseWifiList(result.stdout);
+        const ssids = networks.map((network) => network.ssid).filter((ssid) => ssid);
+        setAvailableNetworks(ssids);
       }
     } catch (error) {
-      console.error("Failed to load current connection:", error);
+      console.error("Failed to load available networks:", error);
     }
   };
 
@@ -180,9 +148,9 @@ export default function ManageSavedNetworks() {
         title: "Disconnected",
         message: "Successfully disconnected from current network",
       });
-      loadWifiDevice(); // Refresh device status
+      loadWifiDeviceData(); // Refresh device status
       loadSavedNetworks(); // Refresh the list
-      loadCurrentConnection(); // Refresh current connection
+      loadCurrentConnectionData(); // Refresh current connection
     } else {
       await showToast({
         title: "Disconnect Failed",
@@ -244,8 +212,9 @@ export default function ManageSavedNetworks() {
   };
 
   useEffect(() => {
-    loadWifiDevice();
-    loadCurrentConnection();
+    loadWifiDeviceData();
+    loadCurrentConnectionData();
+    loadAvailableNetworks();
     loadSavedNetworks();
   }, []);
 
@@ -333,6 +302,28 @@ export default function ManageSavedNetworks() {
                     onAction={handleDisconnect}
                     shortcut={{ modifiers: ["cmd"], key: "d" }}
                   />
+                ) : availableNetworks.includes(network.name) ? (
+                  <Action
+                    title="Connect"
+                    icon={Icon.Wifi}
+                    onAction={() => handleConnect(network.name)}
+                    shortcut={{ modifiers: ["cmd"], key: "enter" }}
+                  />
+                ) : (
+                  <Action
+                    title="Forget Network"
+                    icon={Icon.Trash}
+                    onAction={() => handleForget(network.name, network.uuid)}
+                    shortcut={{ modifiers: ["cmd"], key: "delete" }}
+                  />
+                )}
+                {availableNetworks.includes(network.name) ? (
+                  <Action
+                    title="Forget Network"
+                    icon={Icon.Trash}
+                    onAction={() => handleForget(network.name, network.uuid)}
+                    shortcut={{ modifiers: ["cmd"], key: "delete" }}
+                  />
                 ) : (
                   <Action
                     title="Connect"
@@ -341,12 +332,6 @@ export default function ManageSavedNetworks() {
                     shortcut={{ modifiers: ["cmd"], key: "enter" }}
                   />
                 )}
-                <Action
-                  title="Forget Network"
-                  icon={Icon.Trash}
-                  onAction={() => handleForget(network.name, network.uuid)}
-                  shortcut={{ modifiers: ["cmd"], key: "delete" }}
-                />
                 <Action.CopyToClipboard
                   title="Copy Network Name"
                   content={network.name}
@@ -361,8 +346,9 @@ export default function ManageSavedNetworks() {
                   title="Refresh"
                   icon={Icon.ArrowClockwise}
                   onAction={() => {
-                    loadWifiDevice();
-                    loadCurrentConnection();
+                    loadWifiDeviceData();
+                    loadCurrentConnectionData();
+                    loadAvailableNetworks();
                     loadSavedNetworks();
                   }}
                   shortcut={{ modifiers: ["cmd"], key: "r" }}

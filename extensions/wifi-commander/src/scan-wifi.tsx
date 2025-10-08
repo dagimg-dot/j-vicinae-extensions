@@ -2,80 +2,20 @@ import { Action, ActionPanel, Color, Icon, List, showToast, useNavigation } from
 import { useEffect, useState } from "react";
 import ConnectForm from "./components/ConnectForm";
 import { executeNmcliCommand, executeNmcliCommandSilent } from "./utils/execute";
-
-interface WifiNetwork {
-  inUse: boolean;
-  ssid: string;
-  bssid: string;
-  mode: string;
-  channel: number;
-  rate: string;
-  signal: number;
-  bars: string;
-  security: string;
-}
+import {
+  loadSavedNetworks,
+  loadWifiDevice,
+  parseWifiList,
+  type SavedNetwork,
+  sortNetworks,
+  type WifiDevice,
+  type WifiNetwork,
+} from "./utils/wifi-helpers";
 
 interface ScanResult {
   networks: WifiNetwork[];
   isLoading: boolean;
   error: string | null;
-}
-
-interface SavedNetwork {
-  name: string;
-  uuid: string;
-}
-
-interface WifiDevice {
-  name: string;
-  type: string;
-  state: string;
-  connection: string;
-}
-
-function parseWifiList(output: string): WifiNetwork[] {
-  const lines = output.split("\n").filter((line) => line.trim());
-
-  if (lines.length < 2) {
-    return [];
-  }
-
-  return lines
-    .slice(1)
-    .map((line) => {
-      // Check if the line starts with * (connected network)
-      const startsWithAsterisk = line.trim().startsWith("*");
-      const cleanLine = startsWithAsterisk ? line.trim().substring(1).trim() : line.trim();
-
-      // Split by multiple spaces to handle the fixed-width format
-      const parts = cleanLine.split(/\s{2,}/);
-
-      if (parts.length < 8) return null;
-
-      // Extract fields based on their known positions
-      // Format: BSSID SSID MODE CHAN RATE SIGNAL BARS SECURITY
-      const bssid = parts[0] || "";
-      const ssid = parts[1] || "";
-      const mode = parts[2] || "";
-      const channel = parseInt(parts[3] || "0", 10);
-      const rate = parts[4] || "";
-      const signal = parseInt(parts[5] || "0", 10);
-      const bars = parts[6] || "";
-      const security = parts[7] || "";
-
-      return {
-        inUse: startsWithAsterisk,
-        bssid,
-        ssid,
-        mode,
-        channel,
-        rate,
-        signal,
-        bars,
-        security,
-      };
-    })
-    .filter(Boolean) as WifiNetwork[];
 }
 
 export default function ScanWifi() {
@@ -88,50 +28,14 @@ export default function ScanWifi() {
   const [savedNetworks, setSavedNetworks] = useState<SavedNetwork[]>([]);
   const [wifiDevice, setWifiDevice] = useState<WifiDevice | null>(null);
 
-  const loadWifiDevice = async () => {
-    try {
-      const result = await executeNmcliCommandSilent("device status");
-      if (result.success) {
-        const lines = result.stdout.split("\n").filter((line) => line.trim());
-        const wifiDeviceLine = lines.find((line) => line.includes("wifi"));
-        if (wifiDeviceLine) {
-          const parts = wifiDeviceLine.split(/\s{2,}/);
-          if (parts.length >= 4) {
-            setWifiDevice({
-              name: parts[0] || "",
-              type: parts[1] || "",
-              state: parts[2] || "",
-              connection: parts[3] || "",
-            });
-          }
-        }
-      }
-    } catch (error) {
-      console.error("Failed to load Wi-Fi device:", error);
-    }
+  const loadWifiDeviceData = async () => {
+    const device = await loadWifiDevice();
+    setWifiDevice(device);
   };
 
-  const loadSavedNetworks = async () => {
-    try {
-      const result = await executeNmcliCommandSilent("connection show");
-      if (result.success) {
-        const lines = result.stdout.split("\n").filter((line) => line.trim());
-        const networks = lines
-          .slice(1)
-          .map((line) => {
-            const parts = line.split(/\s{2,}/);
-            if (parts.length < 2) return null;
-            return {
-              name: parts[0] || "",
-              uuid: parts[1] || "",
-            };
-          })
-          .filter(Boolean) as SavedNetwork[];
-        setSavedNetworks(networks);
-      }
-    } catch (error) {
-      console.error("Failed to load saved networks:", error);
-    }
+  const loadSavedNetworksData = async () => {
+    const networks = await loadSavedNetworks();
+    setSavedNetworks(networks);
   };
 
   const scanWifi = async () => {
@@ -150,13 +54,7 @@ export default function ScanWifi() {
       }
 
       const networks = parseWifiList(result.stdout);
-
-      // Sort networks to show connected one first
-      const sortedNetworks = networks.sort((a, b) => {
-        if (a.inUse && !b.inUse) return -1;
-        if (!a.inUse && b.inUse) return 1;
-        return 0;
-      });
+      const sortedNetworks = sortNetworks(networks);
 
       setScanResult({
         networks: sortedNetworks,
@@ -241,7 +139,7 @@ export default function ScanWifi() {
         title: "Disconnected",
         message: "Successfully disconnected from current network",
       });
-      loadWifiDevice(); // Refresh device status
+      loadWifiDeviceData(); // Refresh device status
       scanWifi(); // Refresh the list to update connection status
     } else {
       await showToast({
@@ -266,8 +164,8 @@ export default function ScanWifi() {
   };
 
   useEffect(() => {
-    loadWifiDevice();
-    loadSavedNetworks();
+    loadWifiDeviceData();
+    loadSavedNetworksData();
     scanWifi();
   }, []);
 
