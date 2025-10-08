@@ -13,16 +13,14 @@
     "dev:ext": "pnpm --filter",
     "lint": "biome lint .",
     "lint:fix": "biome lint --write .",
-    "format": "biome format .",
-    "format:fix": "biome format --write .",
-    "check": "biome check .",
-    "check:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "check": "biome check . --write",
     "clean": "pnpm -r clean"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.2",
     "@types/node": "^20.0.0",
-    "@types/react": "^19.0.10",
+    "@types/react": "^18.3.1",
     "typescript": "^5.9.2"
   },
   "engines": {
