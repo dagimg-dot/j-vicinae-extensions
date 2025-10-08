@@ -11,10 +11,10 @@ A monorepo containing various extensions for [Vicinae](https://github.com/vicina
 |                                                 **Power Menu**                                                 |                                                       **GNOME Settings**                                                       |                                         **Floww**                                          |
 |                                  Essential power commands at your fingertips!                                  |                                          Lists and opens GNOME Control Center panels                                           |                        Manage and apply workflows across workspaces                        |
 
-| [<img src="extensions/player-pilot/assets/player_pilot.png" width="120" alt="Player Pilot">](extensions/player-pilot/) |       |
-| :--------------------------------------------------------------------------------------------------------------------: | :---: |
-|                                                    **Player Pilot**                                                    |       |
-|                                         Comprehensive media player controller                                          |       |
+| [<img src="extensions/player-pilot/assets/player_pilot.png" width="120" alt="Player Pilot">](extensions/player-pilot/) | [<img src="extensions/wifi-commander/assets/wifi_commander.png" width="120" alt="Wi‑Fi Commander">](extensions/wifi-commander/) |
+| :--------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------: |
+|                                                    **Player Pilot**                                                    |                                                       **Wi‑Fi Commander**                                                       |
+|                                         Comprehensive media player controller                                          |                                                Complete Wi‑Fi network management                                                |
 
 </div>
 
@@ -42,6 +42,14 @@ A monorepo containing various extensions for [Vicinae](https://github.com/vicina
 - **Rich Metadata**: Displays album art, song titles, artists, and albums
 - **Individual Controls**: Play/pause, next, previous, and stop for each player
 
+### 📶 Wi‑Fi Commander
+- **Network Scanning**: Discover and connect to available Wi‑Fi networks
+- **Smart Connection**: Auto-detects saved networks and connects without password prompts
+- **Saved Network Management**: View, connect to, or forget saved networks
+- **Real-time Status**: Shows connection status and signal strength
+- **Quick Actions**: Turn Wi‑Fi on/off, restart Wi‑Fi services, disconnect
+- **Security Support**: Password protection for secured networks
+
 ## 🛠️ Development
 
 ### Prerequisites
@@ -68,7 +76,8 @@ j-vicinae-extensions/
 │   ├── power-menu/          # Power management commands
 │   ├── gnome-settings/      # GNOME Control Center access
 │   ├── floww/               # Floww CLI integration
-│   └── player-pilot/        # Media player controller
+│   ├── player-pilot/        # Media player controller
+│   └── wifi-commander/      # Wi‑Fi network management
 ├── package.json
 ├── pnpm-workspace.yaml
 └── tsconfig.json
