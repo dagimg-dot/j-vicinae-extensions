@@ -11,25 +11,25 @@
   "author": "dagimg-dot",
   "contributors": [],
   "pastContributors": [],
-  "icon": "extension_icon.png",
+  "icon": "wifi_commander.png",
   "commands": [
     {
       "name": "toggle-wifi-on",
-      "title": "Turn Wi-Fi On",
+      "title": "Turn Wifi On",
       "subtitle": "Enable Wi-Fi radio",
       "description": "Turn on Wi-Fi radio to enable wireless connections",
       "mode": "no-view"
     },
     {
       "name": "toggle-wifi-off",
-      "title": "Turn Wi-Fi Off",
+      "title": "Turn Wifi Off",
       "subtitle": "Disable Wi-Fi radio",
       "description": "Turn off Wi-Fi radio to disable wireless connections",
       "mode": "no-view"
     },
     {
       "name": "restart-wifi",
-      "title": "Restart Wi-Fi",
+      "title": "Restart Wifi",
       "subtitle": "Restart Wi-Fi services",
       "description": "Restart Wi-Fi services to resolve connection issues",
       "mode": "no-view"
