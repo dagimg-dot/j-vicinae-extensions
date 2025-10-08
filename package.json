@@ -22,7 +22,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.2.2",
     "@types/node": "^20.0.0",
-    "@types/react": "^18.2.0",
+    "@types/react": "^19.0.10",
     "typescript": "^5.9.2"
   },
   "engines": {

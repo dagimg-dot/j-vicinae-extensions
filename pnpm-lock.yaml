@@ -15,8 +15,8 @@ importers:
         specifier: ^20.0.0
         version: 20.19.17
       '@types/react':
-        specifier: ^18.2.0
-        version: 18.3.24
+        specifier: ^19.0.10
+        version: 19.2.0
       typescript:
         specifier: ^5.9.2
         version: 5.9.2
@@ -24,8 +24,8 @@ importers:
   extensions/floww:
     dependencies:
       '@vicinae/api':
-        specifier: ^0.12.2
-        version: 0.12.2(@types/node@20.19.17)(@types/react@18.3.24)(typescript@5.9.2)
+        specifier: ^0.14.0
+        version: 0.14.0(@types/node@20.19.17)(@types/react@19.2.0)(typescript@5.9.2)
       js-yaml:
         specifier: ^4.1.0
         version: 4.1.0
@@ -43,8 +43,8 @@ importers:
   extensions/gnome-settings:
     dependencies:
       '@vicinae/api':
-        specifier: ^0.12.2
-        version: 0.12.2(@types/node@20.19.17)(@types/react@18.3.24)(typescript@5.9.2)
+        specifier: ^0.14.0
+        version: 0.14.0(@types/node@20.19.17)(@types/react@19.2.0)(typescript@5.9.2)
     devDependencies:
       typescript:
         specifier: ^5.9.2
@@ -53,8 +53,8 @@ importers:
   extensions/player-pilot:
     dependencies:
       '@vicinae/api':
-        specifier: ^0.12.2
-        version: 0.12.2(@types/node@20.19.17)(@types/react@18.3.24)(typescript@5.9.2)
+        specifier: ^0.14.0
+        version: 0.14.0(@types/node@20.19.17)(@types/react@19.2.0)(typescript@5.9.2)
     devDependencies:
       typescript:
         specifier: ^5.9.2
@@ -63,18 +63,18 @@ importers:
   extensions/power-menu:
     dependencies:
       '@vicinae/api':
-        specifier: ^0.12.2
-        version: 0.12.2(@types/node@20.19.17)(@types/react@18.3.24)(typescript@5.9.2)
+        specifier: ^0.14.0
+        version: 0.14.0(@types/node@20.19.17)(@types/react@19.2.0)(typescript@5.9.2)
       react:
-        specifier: ^18.2.0
-        version: 18.3.1
+        specifier: ^19.0.10
+        version: 19.2.0
     devDependencies:
       '@types/node':
         specifier: ^20.0.0
         version: 20.19.17
       '@types/react':
-        specifier: ^18.2.0
-        version: 18.3.24
+        specifier: ^19.0.10
+        version: 19.2.0
       typescript:
         specifier: ^5.9.2
         version: 5.9.2
@@ -82,8 +82,18 @@ importers:
   extensions/symbols:
     dependencies:
       '@vicinae/api':
-        specifier: ^0.12.2
-        version: 0.12.2(@types/node@20.19.17)(@types/react@18.3.24)(typescript@5.9.2)
+        specifier: ^0.14.0
+        version: 0.14.0(@types/node@20.19.17)(@types/react@19.2.0)(typescript@5.9.2)
+    devDependencies:
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.2
+
+  extensions/wifi-commander:
+    dependencies:
+      '@vicinae/api':
+        specifier: ^0.14.0
+        version: 0.14.0(@types/node@20.19.17)(@types/react@19.2.0)(typescript@5.9.2)
     devDependencies:
       typescript:
         specifier: ^5.9.2
@@ -328,18 +338,15 @@ packages:
   '@types/node@20.19.17':
     resolution: {integrity: sha512-gfehUI8N1z92kygssiuWvLiwcbOB3IRktR6hTDgJlXMYh5OvkPSRmgfoBUmfZt+vhwJtX7v1Yw4KvvAf7c5QKQ==}
 
-  '@types/prop-types@15.7.15':
-    resolution: {integrity: sha512-F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw==}
+  '@types/react@19.2.0':
+    resolution: {integrity: sha512-1LOH8xovvsKsCBq1wnT4ntDUdCJKmnEakhsuoUSy6ExlHCkGP2hqnatagYTgFk6oeL0VU31u7SNjunPN+GchtA==}
 
-  '@types/react@18.3.24':
-    resolution: {integrity: sha512-0dLEBsA1kI3OezMBF8nSsb7Nk19ZnsyE1LLhB8r27KbgU5H4pvuqZLdtE+aUkJVoXgTVuA+iLIwmZ0TuK4tx6A==}
-
-  '@vicinae/api@0.12.2':
-    resolution: {integrity: sha512-F1M1KDeRuViGm9h++sFrxcSdvsfZDkkApxPeYz/HDpt3DNOQX7PYrkedYH4bDpEYVJUsAWRK8yHqq+WPzRfqSg==}
+  '@vicinae/api@0.14.0':
+    resolution: {integrity: sha512-9qMzeHOdcan6iXJ1DQ34642hBzKhrhloOvRDLDl69SfFgEW2rjL2jNevaEoHlBHAKsCQJ0cm3hEtMX+ahiIdUg==}
     hasBin: true
     peerDependencies:
       '@types/node': '>=18'
-      '@types/react': ^18.1.0
+      '@types/react': 19.0.10
 
   ansi-escapes@4.3.2:
     resolution: {integrity: sha512-gKXj5ALrKWQLsYG9jlTRmR/xKluxHV+Z9QEwNIgCfM1/uwPMCuzVVnh5mwTd+OuBZcwSIMbqssNWRm1lE51QaQ==}
@@ -471,9 +478,6 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  js-tokens@4.0.0:
-    resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
-
   js-yaml@4.1.0:
     resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
     hasBin: true
@@ -481,10 +485,6 @@ packages:
   lilconfig@3.1.3:
     resolution: {integrity: sha512-/vlFKAoH5Cgt3Ie+JLhRbwOsCQePABiU3tJ1egGvyQ+33R/vcwM2Zl2QR/LzjsBeItPt3oSVXapn+m4nQDvpzw==}
     engines: {node: '>=14'}
-
-  loose-envify@1.4.0:
-    resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
-    hasBin: true
 
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
@@ -601,12 +601,12 @@ packages:
     resolution: {integrity: sha512-g8+OnU/L2v+wyiVK+D5fA34J7EH8jZ8DDlvwhRCMxmMj7UCBvxiO1mGeN+36JXIKF4zevU4kRBd8lVgG9vLelA==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
 
-  react@18.1.0:
-    resolution: {integrity: sha512-4oL8ivCz5ZEPyclFQXaNksK3adutVS8l2xzZU0cqEFrE9Sb7fC0EFK5uEk74wIreL1DERyjvsU915j1pcT2uEQ==}
+  react@19.0.0:
+    resolution: {integrity: sha512-V8AVnmPIICiWpGfm6GLzCR/W5FXLchHop40W4nXBmdlEceh16rCN8O8LNWm5bh5XUX91fh7KpA+W0TgMKmgTpQ==}
     engines: {node: '>=0.10.0'}
 
-  react@18.3.1:
-    resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
+  react@19.2.0:
+    resolution: {integrity: sha512-tmbWg6W31tQLeB5cdIBOicJDJRR2KzXsV7uSK9iNfLWQ5bIZfxuPEHp7M8wiHyHnn0DD1i7w3Zmin0FtkrwoCQ==}
     engines: {node: '>=0.10.0'}
 
   readdirp@4.1.2:
@@ -844,25 +844,22 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
-  '@types/prop-types@15.7.15': {}
-
-  '@types/react@18.3.24':
+  '@types/react@19.2.0':
     dependencies:
-      '@types/prop-types': 15.7.15
       csstype: 3.1.3
 
-  '@vicinae/api@0.12.2(@types/node@20.19.17)(@types/react@18.3.24)(typescript@5.9.2)':
+  '@vicinae/api@0.14.0(@types/node@20.19.17)(@types/react@19.2.0)(typescript@5.9.2)':
     dependencies:
       '@jgoz/esbuild-plugin-typecheck': 4.0.3(esbuild@0.25.10)(typescript@5.9.2)
       '@oclif/core': 4.5.4
       '@oclif/plugin-help': 6.2.33
       '@oclif/plugin-plugins': 5.4.47
       '@types/node': 20.19.17
-      '@types/react': 18.3.24
+      '@types/react': 19.2.0
       chalk: 5.6.2
       chokidar: 4.0.3
       esbuild: 0.25.10
-      react: 18.1.0
+      react: 19.0.0
       zod: 4.1.11
     transitivePeerDependencies:
       - '@jgoz/esbuild-plugin-livereload'
@@ -988,17 +985,11 @@ snapshots:
       filelist: 1.0.4
       picocolors: 1.1.1
 
-  js-tokens@4.0.0: {}
-
   js-yaml@4.1.0:
     dependencies:
       argparse: 2.0.1
 
   lilconfig@3.1.3: {}
-
-  loose-envify@1.4.0:
-    dependencies:
-      js-tokens: 4.0.0
 
   lru-cache@10.4.3: {}
 
@@ -1035,13 +1026,9 @@ snapshots:
 
   proc-log@4.2.0: {}
 
-  react@18.1.0:
-    dependencies:
-      loose-envify: 1.4.0
+  react@19.0.0: {}
 
-  react@18.3.1:
-    dependencies:
-      loose-envify: 1.4.0
+  react@19.2.0: {}
 
   readdirp@4.1.2: {}
 

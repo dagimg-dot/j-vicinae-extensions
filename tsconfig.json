@@ -43,6 +43,9 @@
     },
     {
       "path": "./extensions/player-pilot"
+    },
+    {
+      "path": "./extensions/wifi-commander"
     }
   ]
 }
