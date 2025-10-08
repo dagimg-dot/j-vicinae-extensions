@@ -1,6 +1,7 @@
-import { Action, ActionPanel, Color, Icon, List, showToast } from "@vicinae/api";
+import { Action, ActionPanel, Color, Icon, List, showToast, useNavigation } from "@vicinae/api";
 import { useEffect, useState } from "react";
-import { executeNmcliCommandSilent } from "./utils/execute";
+import ConnectForm from "./components/ConnectForm";
+import { executeNmcliCommand, executeNmcliCommandSilent } from "./utils/execute";
 
 interface WifiNetwork {
   inUse: boolean;
@@ -20,51 +21,124 @@ interface ScanResult {
   error: string | null;
 }
 
+interface SavedNetwork {
+  name: string;
+  uuid: string;
+}
+
+interface WifiDevice {
+  name: string;
+  type: string;
+  state: string;
+  connection: string;
+}
+
 function parseWifiList(output: string): WifiNetwork[] {
   const lines = output.split("\n").filter((line) => line.trim());
-  const headers = lines[0]?.split(/\s{2,}/) || [];
 
-  if (headers.length < 8) {
+  if (lines.length < 2) {
     return [];
   }
 
   return lines
     .slice(1)
     .map((line) => {
-      const parts = line.split(/\s{2,}/);
-      if (parts.length < 8) return null;
-
       // Check if the line starts with * (connected network)
       const startsWithAsterisk = line.trim().startsWith("*");
-      const adjustedParts = startsWithAsterisk ? parts.slice(1) : parts;
+      const cleanLine = startsWithAsterisk ? line.trim().substring(1).trim() : line.trim();
+
+      // Split by multiple spaces to handle the fixed-width format
+      const parts = cleanLine.split(/\s{2,}/);
+
+      if (parts.length < 8) return null;
+
+      // Extract fields based on their known positions
+      // Format: BSSID SSID MODE CHAN RATE SIGNAL BARS SECURITY
+      const bssid = parts[0] || "";
+      const ssid = parts[1] || "";
+      const mode = parts[2] || "";
+      const channel = parseInt(parts[3] || "0", 10);
+      const rate = parts[4] || "";
+      const signal = parseInt(parts[5] || "0", 10);
+      const bars = parts[6] || "";
+      const security = parts[7] || "";
 
       return {
         inUse: startsWithAsterisk,
-        bssid: adjustedParts[0] || "",
-        ssid: adjustedParts[1] || "",
-        mode: adjustedParts[2] || "",
-        channel: parseInt(adjustedParts[3] || "0", 10),
-        rate: adjustedParts[4] || "",
-        signal: parseInt(adjustedParts[5] || "0", 10),
-        bars: adjustedParts[6] || "",
-        security: adjustedParts[7] || "",
+        bssid,
+        ssid,
+        mode,
+        channel,
+        rate,
+        signal,
+        bars,
+        security,
       };
     })
     .filter(Boolean) as WifiNetwork[];
 }
 
 export default function ScanWifi() {
+  const { push } = useNavigation();
   const [scanResult, setScanResult] = useState<ScanResult>({
     networks: [],
     isLoading: true,
     error: null,
   });
+  const [savedNetworks, setSavedNetworks] = useState<SavedNetwork[]>([]);
+  const [wifiDevice, setWifiDevice] = useState<WifiDevice | null>(null);
+
+  const loadWifiDevice = async () => {
+    try {
+      const result = await executeNmcliCommandSilent("device status");
+      if (result.success) {
+        const lines = result.stdout.split("\n").filter((line) => line.trim());
+        const wifiDeviceLine = lines.find((line) => line.includes("wifi"));
+        if (wifiDeviceLine) {
+          const parts = wifiDeviceLine.split(/\s{2,}/);
+          if (parts.length >= 4) {
+            setWifiDevice({
+              name: parts[0] || "",
+              type: parts[1] || "",
+              state: parts[2] || "",
+              connection: parts[3] || "",
+            });
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Failed to load Wi-Fi device:", error);
+    }
+  };
+
+  const loadSavedNetworks = async () => {
+    try {
+      const result = await executeNmcliCommandSilent("connection show");
+      if (result.success) {
+        const lines = result.stdout.split("\n").filter((line) => line.trim());
+        const networks = lines
+          .slice(1)
+          .map((line) => {
+            const parts = line.split(/\s{2,}/);
+            if (parts.length < 2) return null;
+            return {
+              name: parts[0] || "",
+              uuid: parts[1] || "",
+            };
+          })
+          .filter(Boolean) as SavedNetwork[];
+        setSavedNetworks(networks);
+      }
+    } catch (error) {
+      console.error("Failed to load saved networks:", error);
+    }
+  };
 
   const scanWifi = async () => {
     try {
       setScanResult((prev) => ({ ...prev, isLoading: true, error: null }));
 
-      const result = await executeNmcliCommandSilent("device wifi list");
+      const result = await executeNmcliCommandSilent("device wifi list --rescan yes");
 
       if (!result.success) {
         setScanResult((prev) => ({
@@ -77,8 +151,15 @@ export default function ScanWifi() {
 
       const networks = parseWifiList(result.stdout);
 
+      // Sort networks to show connected one first
+      const sortedNetworks = networks.sort((a, b) => {
+        if (a.inUse && !b.inUse) return -1;
+        if (!a.inUse && b.inUse) return 1;
+        return 0;
+      });
+
       setScanResult({
-        networks,
+        networks: sortedNetworks,
         isLoading: false,
         error: null,
       });
@@ -91,18 +172,81 @@ export default function ScanWifi() {
     }
   };
 
-  const handleConnect = async (ssid: string) => {
-    try {
+  const handleConnect = async (ssid: string, security: string) => {
+    // Check if this network is already saved
+    const isSaved = savedNetworks.some((network) => network.name === ssid);
+
+    // If the network is not secure, connect directly
+    if (!security || security.toLowerCase() === "open") {
       await showToast({
-        title: "Connect to Network",
-        message: `Connecting to "${ssid}"... (password required)`,
+        title: "Connecting...",
+        message: `Attempting to connect to open network ${ssid}`,
       });
-      // Note: This would need password input - for now just show message
-      // In a full implementation, you'd want to prompt for password
-    } catch (_error) {
+      const result = await executeNmcliCommand("device wifi connect", [ssid]);
+      if (result.success) {
+        await showToast({
+          title: "Connection Successful",
+          message: `Successfully connected to ${ssid}`,
+        });
+        scanWifi(); // Refresh the list to show connected status
+      } else {
+        await showToast({
+          title: "Connection Failed",
+          message: result.error || `Could not connect to ${ssid}`,
+        });
+      }
+    } else if (isSaved) {
+      // If the network is saved, connect using the saved connection
       await showToast({
-        title: "Error",
-        message: "Failed to initiate connection",
+        title: "Connecting...",
+        message: `Connecting to saved network ${ssid}`,
+      });
+      const result = await executeNmcliCommand("connection up", [ssid]);
+      if (result.success) {
+        await showToast({
+          title: "Connection Successful",
+          message: `Successfully connected to ${ssid}`,
+        });
+        scanWifi(); // Refresh the list to show connected status
+      } else {
+        await showToast({
+          title: "Connection Failed",
+          message: result.error || `Could not connect to ${ssid}`,
+        });
+      }
+    } else {
+      // If the network is secure and not saved, push the password form
+      push(<ConnectForm ssid={ssid} />);
+    }
+  };
+
+  const handleDisconnect = async () => {
+    if (!wifiDevice) {
+      await showToast({
+        title: "Disconnect Failed",
+        message: "No Wi-Fi device found",
+      });
+      return;
+    }
+
+    await showToast({
+      title: "Disconnecting...",
+      message: "Disconnecting from current network",
+    });
+
+    const result = await executeNmcliCommand("device disconnect", [wifiDevice.name]);
+
+    if (result.success) {
+      await showToast({
+        title: "Disconnected",
+        message: "Successfully disconnected from current network",
+      });
+      loadWifiDevice(); // Refresh device status
+      scanWifi(); // Refresh the list to update connection status
+    } else {
+      await showToast({
+        title: "Disconnect Failed",
+        message: result.error || "Could not disconnect from current network",
       });
     }
   };
@@ -122,6 +266,8 @@ export default function ScanWifi() {
   };
 
   useEffect(() => {
+    loadWifiDevice();
+    loadSavedNetworks();
     scanWifi();
   }, []);
 
@@ -176,7 +322,7 @@ export default function ScanWifi() {
       <List.Section title={`Available Networks (${scanResult.networks.length})`}>
         {scanResult.networks.map((network) => (
           <List.Item
-            key={network.bssid}
+            key={`${network.bssid}-${network.ssid || "hidden"}`}
             title={network.ssid || "Hidden Network"}
             subtitle={`${network.signal}% signal • ${network.security}`}
             icon={network.inUse ? Icon.CheckCircle : getSignalIcon(network.signal)}
@@ -220,11 +366,18 @@ export default function ScanWifi() {
             }
             actions={
               <ActionPanel>
-                {!network.inUse && (
+                {network.inUse ? (
+                  <Action
+                    title="Disconnect"
+                    icon={Icon.XMarkCircle}
+                    onAction={handleDisconnect}
+                    shortcut={{ modifiers: ["cmd"], key: "d" }}
+                  />
+                ) : (
                   <Action
                     title="Connect"
                     icon={Icon.Wifi}
-                    onAction={() => handleConnect(network.ssid)}
+                    onAction={() => handleConnect(network.ssid, network.security)}
                     shortcut={{ modifiers: ["cmd"], key: "enter" }}
                   />
                 )}

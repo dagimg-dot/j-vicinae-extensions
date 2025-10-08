@@ -14,10 +14,24 @@
   "icon": "extension_icon.png",
   "commands": [
     {
-      "name": "toggle-wifi",
-      "title": "Toggle Wifi",
-      "subtitle": "Turn wifi on or off",
-      "description": "Toggle wifi radio between enabled and disabled states",
+      "name": "toggle-wifi-on",
+      "title": "Turn Wi-Fi On",
+      "subtitle": "Enable Wi-Fi radio",
+      "description": "Turn on Wi-Fi radio to enable wireless connections",
+      "mode": "no-view"
+    },
+    {
+      "name": "toggle-wifi-off",
+      "title": "Turn Wi-Fi Off",
+      "subtitle": "Disable Wi-Fi radio",
+      "description": "Turn off Wi-Fi radio to disable wireless connections",
+      "mode": "no-view"
+    },
+    {
+      "name": "restart-wifi",
+      "title": "Restart Wi-Fi",
+      "subtitle": "Restart Wi-Fi services",
+      "description": "Restart Wi-Fi services to resolve connection issues",
       "mode": "no-view"
     },
     {
@@ -25,6 +39,13 @@
       "title": "Scan Wifi Networks",
       "subtitle": "List available wifi networks",
       "description": "Scan and display all available wifi networks with signal strength and security info",
+      "mode": "view"
+    },
+    {
+      "name": "manage-saved-networks",
+      "title": "Manage Saved Networks",
+      "subtitle": "View and manage saved Wi-Fi connections",
+      "description": "List all saved Wi-Fi networks, connect to them, or forget them",
       "mode": "view"
     }
   ],
