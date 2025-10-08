@@ -90,16 +90,19 @@ export default function PlayerInfo() {
         inset={Grid.Inset.Small}
       >
         {players.map((player) => {
-          const subtitle =
-            player.metadata?.title && player.metadata?.artist
-              ? `${player.metadata.title} - ${player.metadata.artist} - ${player.metadata.album}`
-              : player.status;
+          const subtitle = player.metadata?.artist
+            ? `${player.metadata.artist} - ${player.metadata.album}`
+            : player.status;
+
+          const metadataTitle = player.metadata?.title ? `- ${player.metadata.title}` : "";
+
+          const title = `${player.status === "Playing" ? "▶️" : "⏸️"} ${player.displayName} ${metadataTitle}`;
 
           return (
             <Grid.Item
               key={player.name}
               id={player.displayName}
-              title={player.displayName}
+              title={title}
               subtitle={subtitle}
               content={player.metadata?.albumArt || Icon.Music}
               actions={
