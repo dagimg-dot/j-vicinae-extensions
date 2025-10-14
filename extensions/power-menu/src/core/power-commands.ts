@@ -42,13 +42,15 @@ export async function executePowerCommandWithConfirmation({
       return;
     }
 
-    await showToast({
+    const toast = await showToast({
       title: loading,
-      style: Toast.Style.Success,
+      style: Toast.Style.Animated,
     });
 
     try {
       await execAsync(command);
+      toast.style = Toast.Style.Success;
+      toast.title = `${title} completed`;
     } catch (commandError) {
       // If direct command fails with "Access denied" and we have an interactive fallback, try it
       if (
@@ -58,18 +60,26 @@ export async function executePowerCommandWithConfirmation({
       ) {
         console.error("Direct command failed, trying interactive mode");
         await execAsync(interactiveCommand);
+        toast.style = Toast.Style.Success;
+        toast.title = `${title} completed`;
       } else {
-        throw commandError; // Re-throw if it's not an access denied error or no interactive fallback
+        toast.style = Toast.Style.Failure;
+        toast.title = "Error";
+        toast.message = `${errorMessage}: ${commandError instanceof Error ? commandError.message : String(commandError)}`;
+        throw commandError; // Re-throw to be caught by outer catch
       }
     }
 
     await closeMainWindow();
   } catch (error) {
-    await showToast({
-      title: "Error",
-      message: `${errorMessage}: ${error instanceof Error ? error.message : String(error)}`,
-      style: Toast.Style.Failure,
-    });
+    // Only show failure toast if we haven't already updated the loading toast
+    if (error) {
+      await showToast({
+        title: "Error",
+        message: `${errorMessage}: ${error instanceof Error ? error.message : String(error)}`,
+        style: Toast.Style.Failure,
+      });
+    }
   }
 }
 
