@@ -17,6 +17,7 @@ interface PowerCommandOptions {
   message: string;
   command: string;
   errorMessage: string;
+  interactiveCommand?: string;
 }
 
 export async function executePowerCommandWithConfirmation({
@@ -25,6 +26,7 @@ export async function executePowerCommandWithConfirmation({
   message,
   command,
   errorMessage,
+  interactiveCommand,
 }: PowerCommandOptions): Promise<void> {
   try {
     const confirmed = await confirmAlert({
@@ -45,7 +47,22 @@ export async function executePowerCommandWithConfirmation({
       style: Toast.Style.Success,
     });
 
-    await execAsync(command);
+    try {
+      await execAsync(command);
+    } catch (commandError) {
+      // If direct command fails with "Access denied" and we have an interactive fallback, try it
+      if (
+        interactiveCommand &&
+        commandError instanceof Error &&
+        commandError.message.includes("Access denied")
+      ) {
+        console.error("Direct command failed, trying interactive mode");
+        await execAsync(interactiveCommand);
+      } else {
+        throw commandError; // Re-throw if it's not an access denied error or no interactive fallback
+      }
+    }
+
     await closeMainWindow();
   } catch (error) {
     await showToast({
@@ -97,6 +114,7 @@ export const POWER_COMMANDS = {
     loading: "Powering off system...",
     message: "This will shut down your computer immediately",
     command: "systemctl poweroff",
+    interactiveCommand: "systemctl poweroff -i",
     errorMessage: "Failed to power off",
   },
   REBOOT: {
@@ -104,6 +122,7 @@ export const POWER_COMMANDS = {
     loading: "Rebooting system...",
     message: "This will restart your computer immediately",
     command: "systemctl reboot",
+    interactiveCommand: "systemctl reboot -i",
     errorMessage: "Failed to reboot",
   },
   SUSPEND: {
@@ -111,6 +130,7 @@ export const POWER_COMMANDS = {
     loading: "Suspending system...",
     message: "Putting computer to sleep",
     command: "systemctl suspend",
+    interactiveCommand: "systemctl suspend -i",
     errorMessage: "Failed to suspend",
   },
   HIBERNATE: {
@@ -118,6 +138,7 @@ export const POWER_COMMANDS = {
     loading: "Hibernating system...",
     message: "Saving state to disk and powering off",
     command: "systemctl hibernate",
+    interactiveCommand: "systemctl hibernate -i",
     errorMessage: "Failed to hibernate",
   },
   LOGOUT: {
@@ -139,6 +160,7 @@ export const POWER_COMMANDS = {
     loading: "Rebooting to UEFI...",
     message: "Restarting to firmware setup",
     command: "systemctl reboot --firmware-setup",
+    interactiveCommand: "systemctl reboot --firmware-setup -i",
     errorMessage: "Failed to reboot to UEFI",
   },
   REBOOT_RECOVERY: {
@@ -146,6 +168,7 @@ export const POWER_COMMANDS = {
     loading: "Rebooting to Recovery...",
     message: "Restarting to recovery mode",
     command: "systemctl reboot --boot-loader-entry=auto-windows",
+    interactiveCommand: "systemctl reboot --boot-loader-entry=auto-windows -i",
     errorMessage: "Failed to reboot to recovery",
   },
 } as const;
