@@ -126,6 +126,25 @@ importers:
         specifier: ^5.9.2
         version: 5.9.2
 
+  extensions/telegraph:
+    dependencies:
+      '@vicinae/api':
+        specifier: ^0.14.0
+        version: 0.14.5(@types/node@20.19.17)(@types/react@19.2.2)(typescript@5.9.2)
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+    devDependencies:
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.19.17
+      '@types/react':
+        specifier: ^19.0.10
+        version: 19.2.2
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.2
+
   extensions/wifi-commander:
     dependencies:
       '@vicinae/api':
@@ -2133,6 +2152,24 @@ snapshots:
       '@oclif/plugin-help': 6.2.33
       '@oclif/plugin-plugins': 5.4.47
       '@types/node': 22.18.10
+      '@types/react': 19.2.2
+      chalk: 5.6.2
+      chokidar: 4.0.3
+      esbuild: 0.25.10
+      react: 19.0.0
+      zod: 4.1.11
+    transitivePeerDependencies:
+      - '@jgoz/esbuild-plugin-livereload'
+      - supports-color
+      - typescript
+
+  '@vicinae/api@0.14.5(@types/node@20.19.17)(@types/react@19.2.2)(typescript@5.9.2)':
+    dependencies:
+      '@jgoz/esbuild-plugin-typecheck': 4.0.3(esbuild@0.25.10)(typescript@5.9.2)
+      '@oclif/core': 4.5.4
+      '@oclif/plugin-help': 6.2.33
+      '@oclif/plugin-plugins': 5.4.47
+      '@types/node': 20.19.17
       '@types/react': 19.2.2
       chalk: 5.6.2
       chokidar: 4.0.3
