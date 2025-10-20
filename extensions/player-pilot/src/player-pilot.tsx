@@ -91,7 +91,7 @@ export default function PlayerInfo() {
       >
         {players.map((player) => {
           const subtitle = player.metadata?.artist
-            ? `${player.metadata.artist} - ${player.metadata.album}`
+            ? `${player.metadata.artist} - ${player.metadata.album ?? 'Unknown'}`
             : player.status;
 
           const metadataTitle = player.metadata?.title ? `- ${player.metadata.title}` : "";
