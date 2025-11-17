@@ -53,11 +53,7 @@ export async function executePowerCommandWithConfirmation({
       toast.title = `${title} completed`;
     } catch (commandError) {
       // If direct command fails with "Access denied" and we have an interactive fallback, try it
-      if (
-        interactiveCommand &&
-        commandError instanceof Error &&
-        commandError.message.includes("Access denied")
-      ) {
+      if (interactiveCommand && commandError instanceof Error) {
         console.error("Direct command failed, trying interactive mode");
         await execAsync(interactiveCommand);
         toast.style = Toast.Style.Success;
