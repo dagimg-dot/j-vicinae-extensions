@@ -1,5 +1,4 @@
 import { exec } from "node:child_process";
-import { promisify } from "node:util";
 import {
   Alert,
   closeMainWindow,
@@ -8,8 +7,6 @@ import {
   showToast,
   Toast,
 } from "@vicinae/api";
-
-const execAsync = promisify(exec);
 
 interface PowerCommandOptions {
   title: string;
@@ -42,40 +39,35 @@ export async function executePowerCommandWithConfirmation({
       return;
     }
 
-    const toast = await showToast({
+    await showToast({
       title: loading,
       style: Toast.Style.Animated,
     });
 
-    try {
-      await execAsync(command);
-      toast.style = Toast.Style.Success;
-      toast.title = `${title} completed`;
-    } catch (commandError) {
-      // If direct command fails with "Access denied" and we have an interactive fallback, try it
-      if (interactiveCommand && commandError instanceof Error) {
-        console.error("Direct command failed, trying interactive mode");
-        await execAsync(interactiveCommand);
-        toast.style = Toast.Style.Success;
-        toast.title = `${title} completed`;
-      } else {
-        toast.style = Toast.Style.Failure;
-        toast.title = "Error";
-        toast.message = `${errorMessage}: ${commandError instanceof Error ? commandError.message : String(commandError)}`;
-        throw commandError; // Re-throw to be caught by outer catch
-      }
-    }
-
+    // Close window immediately and execute command independently (fire and forget)
+    // This prevents the Node process from staying alive when system suspends/reboots
     await closeMainWindow();
+
+    // Execute command without awaiting - fire and forget
+    exec(command, (error) => {
+      if (error && interactiveCommand) {
+        // If direct command fails, try interactive fallback
+        console.error("Direct command failed, trying interactive mode");
+        exec(interactiveCommand, (interactiveError) => {
+          if (interactiveError) {
+            console.error("Interactive command also failed:", interactiveError);
+          }
+        });
+      } else if (error) {
+        console.error("Command failed:", error);
+      }
+    });
   } catch (error) {
-    // Only show failure toast if we haven't already updated the loading toast
-    if (error) {
-      await showToast({
-        title: "Error",
-        message: `${errorMessage}: ${error instanceof Error ? error.message : String(error)}`,
-        style: Toast.Style.Failure,
-      });
-    }
+    await showToast({
+      title: "Error",
+      message: `${errorMessage}: ${error instanceof Error ? error.message : String(error)}`,
+      style: Toast.Style.Failure,
+    });
   }
 }
 
