@@ -39,6 +39,9 @@ export async function executePowerCommandWithConfirmation({
       return;
     }
 
+    // Small delay to ensure alert dialog is fully dismissed before closing window
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
     await showToast({
       title: loading,
       style: Toast.Style.Animated,
