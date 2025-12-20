@@ -1,4 +1,4 @@
-import { exec } from "node:child_process";
+import { spawn } from "node:child_process";
 import {
   Alert,
   closeMainWindow,
@@ -17,6 +17,20 @@ interface PowerCommandOptions {
   interactiveCommand?: string;
 }
 
+/**
+ * Spawn a system command that is fully detached from the extension lifecycle.
+ */
+function fireAndForget(command: string) {
+  const child = spawn(command, {
+    shell: true,
+    detached: true,
+    stdio: "ignore",
+  });
+
+  // Allow the parent (extension) to exit independently
+  child.unref();
+}
+
 export async function executePowerCommandWithConfirmation({
   title,
   loading,
@@ -27,7 +41,7 @@ export async function executePowerCommandWithConfirmation({
 }: PowerCommandOptions): Promise<void> {
   try {
     const confirmed = await confirmAlert({
-      title: `Confirm ${loading}`,
+      title: `Confirm ${title}`,
       message,
       primaryAction: {
         title,
@@ -39,32 +53,33 @@ export async function executePowerCommandWithConfirmation({
       return;
     }
 
-    // Small delay to ensure alert dialog is fully dismissed before closing window
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
+    // Show feedback immediately
     await showToast({
       title: loading,
       style: Toast.Style.Animated,
     });
 
-    // Close window immediately and execute command independently (fire and forget)
-    // This prevents the Node process from staying alive when system suspends/reboots
+    /**
+     * closeMainWindow() is async but NOT blocking
+     * we must allow the host to start tearing down the UI
+     */
     await closeMainWindow();
 
-    // Execute command without awaiting - fire and forget
-    exec(command, (error) => {
-      if (error && interactiveCommand) {
-        // If direct command fails, try interactive fallback
-        console.error("Direct command failed, trying interactive mode");
-        exec(interactiveCommand, (interactiveError) => {
-          if (interactiveError) {
-            console.error("Interactive command also failed:", interactiveError);
-          }
-        });
-      } else if (error) {
-        console.error("Command failed:", error);
+    /**
+     * Execute on next tick so the window-close request
+     * is processed before spawning the command.
+     */
+    setTimeout(() => {
+      try {
+        fireAndForget(command);
+      } catch (error) {
+        if (interactiveCommand) {
+          fireAndForget(interactiveCommand);
+        } else {
+          console.error("Power command failed:", error);
+        }
       }
-    });
+    }, 200);
   } catch (error) {
     await showToast({
       title: "Error",

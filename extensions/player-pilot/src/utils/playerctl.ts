@@ -76,7 +76,7 @@ export async function getPlayerMetadata(player: string): Promise<PlayerMetadata 
 function getDisplayName(playerName: string): string {
   let displayName = ""
 
-  const splittedName = playerName.split(".")
+  const splittedName = playerName.split(".");
 
   if (splittedName.length === 3) {
     displayName = splittedName[1]
