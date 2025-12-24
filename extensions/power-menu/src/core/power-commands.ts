@@ -17,18 +17,28 @@ interface PowerCommandOptions {
   interactiveCommand?: string;
 }
 
-/**
- * Spawn a system command that is fully detached from the extension lifecycle.
- */
-function fireAndForget(command: string) {
-  const child = spawn(command, {
-    shell: true,
-    detached: true,
-    stdio: "ignore",
+function fireAndFallback(command: string, interactiveCommand?: string) {
+  const child = spawn(command, { shell: true });
+
+  child.on("error", (err) => {
+    console.error("Command failed:", err);
+    if (interactiveCommand) {
+      // Run interactive fallback
+      spawn(interactiveCommand, { shell: true, stdio: "inherit" });
+    }
   });
 
-  // Allow the parent (extension) to exit independently
-  child.unref();
+  child.on("exit", (code) => {
+    if (code !== 0 && interactiveCommand) {
+      // Non-zero exit → fallback
+      spawn(interactiveCommand, { shell: true, stdio: "inherit" });
+    }
+  });
+
+  // Only detach if non-interactive
+  if (!interactiveCommand) {
+    child.unref();
+  }
 }
 
 export async function executePowerCommandWithConfirmation({
@@ -70,15 +80,7 @@ export async function executePowerCommandWithConfirmation({
      * is processed before spawning the command.
      */
     setTimeout(() => {
-      try {
-        fireAndForget(command);
-      } catch (error) {
-        if (interactiveCommand) {
-          fireAndForget(interactiveCommand);
-        } else {
-          console.error("Power command failed:", error);
-        }
-      }
+      fireAndFallback(command, interactiveCommand);
     }, 200);
   } catch (error) {
     await showToast({
