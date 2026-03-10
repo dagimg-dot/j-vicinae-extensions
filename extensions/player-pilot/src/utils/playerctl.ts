@@ -74,19 +74,17 @@ export async function getPlayerMetadata(player: string): Promise<PlayerMetadata 
 }
 
 function getDisplayName(playerName: string): string {
-  let displayName = ""
+  let displayName = "";
 
   const splittedName = playerName.split(".");
 
   if (splittedName.length === 3) {
-    displayName = splittedName[1]
+    displayName = splittedName[1];
   } else {
-    displayName = splittedName[0]
+    displayName = splittedName[0];
   }
 
-  return displayName.charAt(0)
-    .toUpperCase() + displayName.slice(1).toLowerCase();
-
+  return displayName.charAt(0).toUpperCase() + displayName.slice(1).toLowerCase();
 }
 
 export async function getAllPlayers(): Promise<PlayerInfo[]> {
@@ -138,7 +136,7 @@ export async function getAllPlayers(): Promise<PlayerInfo[]> {
         const status = statusRaw.stdout.trim() as "Playing" | "Paused" | "Stopped";
 
         // Create display name: capitalize first letter and take first part before dots
-        const displayName = getDisplayName(playerName)
+        const displayName = getDisplayName(playerName);
 
         // Get metadata if player is playing or paused
         let metadata: PlayerMetadata | null = null;

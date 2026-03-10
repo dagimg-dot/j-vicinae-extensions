@@ -16,6 +16,21 @@
       "subtitle": "tel",
       "description": "open users list",
       "mode": "view"
+    },
+    {
+      "name": "open-telegram-user",
+      "title": "Open Telegram User",
+      "subtitle": "tg",
+      "description": "open telegram user by username",
+      "mode": "no-view",
+      "arguments": [
+        {
+          "name": "username",
+          "type": "text",
+          "required": true,
+          "placeholder": "username"
+        }
+      ]
     }
   ],
   "preferences": [],

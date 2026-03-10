@@ -83,6 +83,10 @@
         {
           "title": "loginctl",
           "value": "loginctl lock-session"
+        },
+        {
+          "title": "Noctalia Shell",
+          "value": "qs -c noctalia-shell ipc call lockScreen lock"
         }
       ]
     },
@@ -105,6 +109,10 @@
         {
           "title": "KDE",
           "value": "qdbus org.kde.ksmserver /KSMServer logout 0 0 1"
+        },
+        {
+          "title": "Niri",
+          "value": "niri msg action quit -s"
         }
       ]
     }
